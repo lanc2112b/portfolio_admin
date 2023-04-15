@@ -6,7 +6,7 @@ import SpinnerButton from '../uiparts/SpinnerButton';
 const NewAccountButton = () => {
     
     const { handleGoogle, loading } = useFetch(   // error   : optional param if needed
-        `${process.env.REACT_APP_API_URL}/signup`
+        `${process.env.REACT_APP_API_URL}/api/admin/users/register`
     );
 
     useEffect(() => {

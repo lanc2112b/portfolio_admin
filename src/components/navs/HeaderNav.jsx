@@ -1,5 +1,6 @@
 import { useState } from "react";
 import classNames from 'classnames';
+import { Link } from "react-router-dom";
 
 const HeaderNav = () => {
 
@@ -42,9 +43,9 @@ const HeaderNav = () => {
             </div>
             <nav className="flex xs:flex-col">
                 <ul className={menuGroupClass} >
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><a href="/">Link 2</a></li>
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><a href="/">Link 3</a></li>
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><a href="/">Link 1</a></li>
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/" >Home</Link></li>
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/login" >Login</Link></li>
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>
                 </ul>
             </nav>
         </>

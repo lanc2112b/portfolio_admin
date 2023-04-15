@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="w-full flex flex-col min-h-screen">
+    <div id="wrapper" className="w-full flex flex-col min-h-screen">
       <Header />
       <Routes>
         <Route path="/" element={<MainSection />} />

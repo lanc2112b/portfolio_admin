@@ -2,7 +2,7 @@ const MainSection = ({element}) => {
 
   return (
     <>
-      <main className="container mt-2 mx-auto px-2">
+      <main className="container mt-3 mb-6 mx-auto px-2 flex flex-col grow">
           {element}
       </main>
     </>

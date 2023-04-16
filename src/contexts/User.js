@@ -6,12 +6,12 @@ export const UserProvider = ({ children }) => {
 
   const initial = {
     user: {
-      firstName: null,
-      lastName: null,
-      picture: null,
+      first_name: null,
+      last_name: null,
+      photo_url: null,
       email: null,
-      token: null,
-      refresh: null,
+      access_token: null,
+      refresh_at: null,
     },
   };
 

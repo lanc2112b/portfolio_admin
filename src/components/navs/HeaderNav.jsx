@@ -28,7 +28,7 @@ const HeaderNav = () => {
     )
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3 sm:p-0">
+            <div className="flex items-center justify-between px-5 py-3 sm:p-0">
                 <div className="flex flex-row items-center">
                     <img src="/Muninn_72.png" alt="MuninnTech logo" />
                     <h1 className="ms-3 me-auto font-bold text-2xl sm:text-3xl md:text-4xl">MuninnTech</h1>

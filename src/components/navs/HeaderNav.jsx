@@ -15,7 +15,7 @@ const HeaderNav = () => {
         }
     }, [setUser]);
 
-    const logout = () => {
+    const logoutHandler = () => {
         localStorage.removeItem("user");
 
         setUser({
@@ -42,6 +42,7 @@ const HeaderNav = () => {
     /*     const closeHandler = () => {
             setMenuOpen
         } */
+
 
     const menuGroupClass = classNames(
         'sm:inline-flex',
@@ -74,10 +75,10 @@ const HeaderNav = () => {
                 <ul className={menuGroupClass} >
                     <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/" >Home</Link></li>
 
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/login" >Login</Link></li>
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>
-
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><img src={user.photo_url ?? null} alt="user profile" className="rounded-full w-6 h-6" /></li>
+                    {!user.email && <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/login" >Login</Link></li>}
+                    {!user.email && <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>}
+                    {user.email && <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold" onClick={logoutHandler}>Logout</li>}
+                    {user.email && <li className="px-5 py-1 sm:px-3 sm:ml-3 font-semibold "><img src={user.photo_url ?? null} alt="user profile" className="rounded-full w-6 h-6" /></li>}
                 </ul>
             </nav>
         </>

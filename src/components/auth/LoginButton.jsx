@@ -7,7 +7,7 @@ import SpinnerButton from '../uiparts/SpinnerButton';
 const LoginButton = () => {
 
     const { handleGoogle, loading } = useFetch(
-        `${process.env.REACT_APP_API_URL}/login`  //FIXME: Needs to be added to .env.local!
+        `${process.env.REACT_APP_API_URL}/api/admin/users/login`  //FIXME: Needs to be added to .env.local!
     );
 
     useEffect(() => {

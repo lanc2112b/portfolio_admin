@@ -11,11 +11,9 @@ export const UserProvider = ({ children }) => {
       picture: null,
       email: null,
       token: null,
+      refresh: null,
     },
   };
-
-
- // { ***REMOVED*** }
 
   const [user, setUser] = useState(initial);
 

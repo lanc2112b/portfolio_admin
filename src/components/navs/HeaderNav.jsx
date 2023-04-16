@@ -1,8 +1,37 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../../contexts/User";
 import classNames from 'classnames';
 import { Link } from "react-router-dom";
 
 const HeaderNav = () => {
+
+    const { setUser } = useContext(UserContext);  //user, 
+
+    useEffect(() => {
+        const theUser = localStorage.getItem("user");
+
+        if (theUser && !theUser.includes("undefined")) {
+            setUser(JSON.parse(theUser));
+        }
+    }, [setUser]);
+
+    const logout = () => {
+        localStorage.removeItem("user");
+
+        setUser({
+            user: {
+                firstName: null,
+                lastName: null,
+                picture: null,
+                email: null,
+                token: null,
+                refresh: null,
+            },
+        });
+        window.location.replace('/login');
+    };
+
+
 
     const [menuOpen, setMenuOpen] = useState(false);
 

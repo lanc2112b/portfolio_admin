@@ -1,13 +1,13 @@
-import { useState } from "react";  //, useContext
+import { useState, useContext } from "react";  //, useContext
 //import { MessageContext } from "../contexts/Message";
-//import { UserContext } from "../contexts/User";
+import { UserContext } from "../contexts/User";
 
 // Pass URL
 const useFetch = (url) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   //const { setMessage } = useContext(MessageContext);
-  //const { setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   //console.log(error, 'error message')
   const handleGoogle = async (response) => {
@@ -32,7 +32,17 @@ const useFetch = (url) => {
         //if (data.user.accounts) {
         if (data?.user) {
           localStorage.setItem("user", JSON.stringify(data?.user));
-          //setUser(data?.user); Doesn't persist past reload / replace
+          setUser({
+            user: {
+              firstName: data.first_name,
+              lastName: data.last_name,
+              picture: data.photo_url,
+              email: data.email,
+              token: data.access_token,
+              refresh: data.refresh_at,
+            }
+          });
+            // setUser(data?.user); //Doesn't persist past reload / replace
           //window.location.reload();
           window.location.replace('/')
         }

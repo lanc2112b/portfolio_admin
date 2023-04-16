@@ -1,13 +1,9 @@
-const MainSection = () => {
+const MainSection = ({element}) => {
 
   return (
     <>
-      <main className="container mt-2 mx-auto px-2">
-        <div>
-          <p className="text-4xl font-bold text-blue-500">Something in main section</p>
-          <p>Needs to be centered possibly</p>
-
-        </div>
+      <main className="container mt-3 mb-6 mx-auto px-2 flex flex-col grow">
+          {element}
       </main>
     </>
   )

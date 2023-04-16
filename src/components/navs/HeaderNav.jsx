@@ -1,7 +1,37 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../../contexts/User";
 import classNames from 'classnames';
+import { Link } from "react-router-dom";
 
 const HeaderNav = () => {
+
+    const { user, setUser } = useContext(UserContext);  //user, 
+
+    useEffect(() => {
+        const theUser = localStorage.getItem("user");
+
+        if (theUser && !theUser.includes("undefined")) {
+            setUser(JSON.parse(theUser));
+        }
+    }, [setUser]);
+
+    const logout = () => {
+        localStorage.removeItem("user");
+
+        setUser({
+            user: {
+                firstName: null,
+                lastName: null,
+                picture: null,
+                email: null,
+                token: null,
+                refresh: null,
+            },
+        });
+        window.location.replace('/login');
+    };
+
+
 
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -27,7 +57,7 @@ const HeaderNav = () => {
     )
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3 sm:p-0">
+            <div className="flex items-center justify-between px-5 py-3 sm:p-0">
                 <div className="flex flex-row items-center">
                     <img src="/Muninn_72.png" alt="MuninnTech logo" />
                     <h1 className="ms-3 me-auto font-bold text-2xl sm:text-3xl md:text-4xl">MuninnTech</h1>
@@ -42,9 +72,12 @@ const HeaderNav = () => {
             </div>
             <nav className="flex xs:flex-col">
                 <ul className={menuGroupClass} >
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><a href="/">Link 2</a></li>
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><a href="/">Link 3</a></li>
-                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><a href="/">Link 1</a></li>
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/" >Home</Link></li>
+
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/login" >Login</Link></li>
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>
+
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><img src={user.photo_url ?? null} alt="user profile" className="rounded-full w-6 h-6" /></li>
                 </ul>
             </nav>
         </>

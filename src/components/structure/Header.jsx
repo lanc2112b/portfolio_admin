@@ -4,9 +4,11 @@ const Header = () => {
 
   return (
     <>
-      <header className="w-full mx-auto sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+      <div className="w-full border-b sm:ps-2">
+      <header className="w-full container mx-auto sm:flex sm:justify-between sm:items-center sm:px-2 sm:py-3">
         <HeaderNav />
-      </header>
+        </header>
+      </div>
     </>
   )
 

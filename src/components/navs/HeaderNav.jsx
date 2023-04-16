@@ -20,12 +20,12 @@ const HeaderNav = () => {
 
         setUser({
             user: {
-                firstName: null,
-                lastName: null,
-                picture: null,
+                first_name: null,
+                last_name: null,
+                photo_url: null,
                 email: null,
-                token: null,
-                refresh: null,
+                access_token: null,
+                refresh_at: null,
             },
         });
         window.location.replace('/login');
@@ -79,6 +79,7 @@ const HeaderNav = () => {
                     {!user.email && <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>}
                     {user.email && <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold" onClick={logoutHandler}>Logout</li>}
                     {user.email && <li className="px-5 py-1 sm:px-3 sm:ml-3 font-semibold "><img src={user.photo_url ?? null} alt="user profile" className="rounded-full w-6 h-6" /></li>}
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/messages" >Messages</Link></li>
                 </ul>
             </nav>
         </>

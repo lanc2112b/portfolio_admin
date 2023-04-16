@@ -32,7 +32,7 @@ const useFetch = (url) => {
         //if (data.user.accounts) {
         if (data?.user) {
           localStorage.setItem("user", JSON.stringify(data?.user));
-          setUser({
+          /* setUser({
             user: {
               firstName: data.first_name,
               lastName: data.last_name,
@@ -41,8 +41,8 @@ const useFetch = (url) => {
               token: data.access_token,
               refresh: data.refresh_at,
             }
-          });
-            // setUser(data?.user); //Doesn't persist past reload / replace
+          }); */
+           setUser(data?.user); //Doesn't persist past reload / replace
           //window.location.reload();
           window.location.replace('/')
         }

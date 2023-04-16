@@ -1,8 +1,10 @@
 import './App.css';
+import { Routes, Route } from 'react-router-dom';
+
+import { Header, Footer, MainSection } from "./components/structure/index";
 import NewAccountPage from './components/auth/NewAccountPage';
 import LoginPage from './components/auth/LoginPage';
-import { Header, Footer, MainSection } from "./components/structure/index";
-import { Routes, Route } from 'react-router-dom';
+import ContactItems from './components/contacts/ContactItems';
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
         <Route path="/" element={<MainSection />} />
         <Route path="/register" element={<MainSection element={<NewAccountPage />} />} />
         <Route path="/login" element={<MainSection element={<LoginPage />} />} />
+        <Route path="/messages" element={<MainSection element={<ContactItems />} />} />
       </Routes>
       <Footer />
     </div>

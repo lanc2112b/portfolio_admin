@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const HeaderNav = () => {
 
-    const { setUser } = useContext(UserContext);  //user, 
+    const { user, setUser } = useContext(UserContext);  //user, 
 
     useEffect(() => {
         const theUser = localStorage.getItem("user");
@@ -73,8 +73,11 @@ const HeaderNav = () => {
             <nav className="flex xs:flex-col">
                 <ul className={menuGroupClass} >
                     <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/" >Home</Link></li>
+
                     <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><Link to="/login" >Login</Link></li>
                     <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold"><Link to="/register" >Register</Link></li>
+
+                    <li className="px-5 py-1 sm:px-3 hover:bg-slate-100 sm:ml-3 font-semibold "><img src={user.photo_url ?? null} alt="user profile" className="rounded-full w-6 h-6" /></li>
                 </ul>
             </nav>
         </>

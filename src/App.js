@@ -5,6 +5,7 @@ import { Header, Footer, MainSection } from "./components/structure/index";
 import NewAccountPage from './components/auth/NewAccountPage';
 import LoginPage from './components/auth/LoginPage';
 import ContactItems from './components/contacts/ContactItems';
+import Portfolio from './components/portfolio/Portfolio';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<MainSection element={<NewAccountPage />} />} />
         <Route path="/login" element={<MainSection element={<LoginPage />} />} />
         <Route path="/messages" element={<MainSection element={<ContactItems />} />} />
+        <Route path="/portfolio" element={<MainSection element={<Portfolio />} />} />
       </Routes>
       <Footer />
     </div>

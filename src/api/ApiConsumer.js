@@ -16,3 +16,13 @@ export const getContactItems = (token) => {
     });
   
 };
+
+export const getPortfolioItems = () => {
+
+  return api.get(`/api/portfolios/index`)
+    .then((results) => {
+      //console.log(results)
+      return results.data;
+    });
+
+};

@@ -1,6 +1,6 @@
 import ContactItemRow from "./ContactItemRow";
 
-const ContactItemsList = ({ list }) => {
+const ContactItemsList = ({ list, modalHandler }) => {
 
     return (
         <>
@@ -10,8 +10,8 @@ const ContactItemsList = ({ list }) => {
                         <tr className="bg-slate-300">
                             <th className="text-left p-3" >Name</th>
                             <th className="text-left p-3" >Email</th>
-                            <th className="text-left p-3">Subject</th>
-                            <th className="text-left p-3">Question</th>
+                            <th className="text-left p-3 hidden md:table-cell">Subject</th>
+                            <th className="text-left p-3 hidden md:table-cell">Question</th>
                             <th className="text-left p-3">Date</th>
                             <th className="text-center text-xl p-3"><i className="fa-regular fa-envelope"></i></th>
                             <th className="text-center text-xl p-3"><i className="fa-regular fa-eye"></i></th>
@@ -22,7 +22,7 @@ const ContactItemsList = ({ list }) => {
                         {list.map((element) => {
                             return (
                                 <tr key={element.id} className=" border-slate-600 border-y even:bg-slate-100 odd:bg-white">
-                                    <ContactItemRow element={element} />
+                                    <ContactItemRow element={element} modalHandler={modalHandler} />
                                 </tr>
                             )
                         })}

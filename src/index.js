@@ -8,7 +8,7 @@ import { MessageProvider } from "./contexts/Message";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+
     <BrowserRouter>
       <MessageProvider>
         <UserProvider>
@@ -16,5 +16,5 @@ root.render(
         </UserProvider>
       </MessageProvider>
     </BrowserRouter>
-  </React.StrictMode >
+
 );

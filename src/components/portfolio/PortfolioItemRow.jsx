@@ -21,11 +21,6 @@ const PortfolioItemRow = ({ element }) => {
                     <i className="fa-solid fa-pen"></i>
                 </button>
             </td>
-            <td className="px-3 py-2 text-center">
-                <button type="button" value={element.id} className="hover:bg-cyan-100 text-sky-700 py-1 px-3 rounded-lg">
-                    <i className="fa-solid fa-expand"></i>
-                </button>
-            </td>
         </>
     )
 }

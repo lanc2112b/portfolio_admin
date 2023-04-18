@@ -15,7 +15,6 @@ const PortfolioItemsList = ({ list, expanded }) => {
                             <th className="text-left p-3">GitHub URL</th>
                             <th className="text-left p-3">Date</th>
                             <th className="text-center text-xl p-3"><i className="fa-solid fa-file-pen"></i></th>
-                            <th className="text-center text-xl p-3"><i className="fa-regular fa-eye"></i></th>
                         </tr>
                     </thead>
                     <tbody>

@@ -16,3 +16,46 @@ export const getContactItems = (token) => {
     });
   
 };
+
+export const getPortfolioItems = () => {
+
+  return api.get(`/api/portfolios/index`)
+    .then((results) => {
+      //console.log(results)
+      return results.data;
+    });
+
+};
+
+export const getPortfolioItem = (id) => {
+
+  return api.get(`/api/portfolios/${id}/view`)
+    .then((result) => {
+      //console.log(results)
+      return result.data.item;
+    });
+
+};
+
+
+export const postPortfolioItem = (formObj, token) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.post(`/api/admin/portfolios/add`, formObj, headers)
+    .then((result) => {
+      console.log(result)
+      return result.data;
+    });
+
+};
+
+export const patchPortfolioItem = (formObj, token, id) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.patch(`/api/admin/portfolios/${id}/update`, formObj, headers)
+    .then((result) => {
+      console.log(result)
+      return result.data;
+    });
+
+};

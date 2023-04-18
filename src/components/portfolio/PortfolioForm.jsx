@@ -1,31 +1,25 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
-import { postPortfolioItem } from "../../api/ApiConsumer";
+import { postPortfolioItem, patchPortfolioItem} from "../../api/ApiConsumer";
 
-const PortfolioForm = () => {
+const PortfolioForm = ({ expanded, useMode, item, loading }) => {
 
     const { user } = useContext(UserContext);
 
-    const [expanded, setExpanded] = useState(false);
-
-    const [formObj, setFormObj] = useState({
+    const initial = (useMode === 'edit') ? { ...item } : {
         title: '',
         description: '',
         hosted_url: '',
         github_url: '',
         image_url: '',
         video_url: '',
-    });
+    };
+
+    const [formObj, setFormObj] = useState(initial);
 
     const resetHandler = () => {
-        setFormObj({
-            title: '',
-            description: '',
-            hosted_url: '',
-            github_url: '',
-            image_url: '',
-            video_url: '',
-        });
+        setFormObj(initial);
+
         setFormErrors({
             title: null,
             description: null,
@@ -216,7 +210,9 @@ const PortfolioForm = () => {
 
         setFormErrors(tmpObj);
 
-        postPortfolioItem(formObj, token)
+        const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem ;
+        
+        modeFunc(formObj, token, item?.id)
             .then((result) => {
                 resetHandler();
 
@@ -232,24 +228,12 @@ const PortfolioForm = () => {
 
     }
 
-    const toggleExpanded = () => {
-
-        setExpanded(!expanded);
-
-    }
-
-    
-
     //console.log(formErrors);
+    if (loading) 
+        return ( <> <p>Loading...</p> </> )
 
     return (
         <>
-            <div className="w-full flex justify-end py-2 px-3">
-                <button type="button" className="bg-green-500 text-white font-semibold rounded-full focus:bg-green-600 hover:bg-green-600 px-3 py-1 shadow-md" onClick={toggleExpanded}>
-                    {!expanded ? <i className="me-3 fa-regular fa-square-plus"></i> : <i className="me-3 fa-regular fa-square-minus"></i>}
-                    Add
-                </button>
-            </div>
             <div className={`px-3 pt-0 mb-6 overflow-hidden transition-[max-height] duration-500 ${!expanded ? "ease-in" : "ease-out"} ${expanded ? "max-h-max" : "max-h-0"}`}>
                 <form onSubmit={formHandler}>
                     <div className="w-full grid grid-cols-2 gap-4 justify-between">
@@ -288,13 +272,22 @@ const PortfolioForm = () => {
                         <button type="button" onClick={resetHandler} className="me-4 text-zinc-700 font-semibold py-1 px-3">
                             Reset
                         </button>
+                        {useMode === 'add' ?
                         <button type="submit" className="w-full font-semibold text-white sm:w-fit rounded-full bg-green-500 hover:bg-green-600 shadow-md py-1 px-3">
                             <i className="me-3 fa-solid fa-folder-plus"></i>
                             Add Item
-                        </button>
+                        </button> 
+                            :
+                        <button type="submit" className="w-full font-semibold text-white sm:w-fit rounded-full bg-orange-500 hover:bg-orange-600 shadow-md py-1 px-3">
+                                <i className="me-2 fa-regular fa-floppy-disk"></i>
+                            Save Item
+                        </button> 
+                         }
                     </div>
                 </form>
+                <hr className=""/>
             </div>
+            
         </>
     )
 

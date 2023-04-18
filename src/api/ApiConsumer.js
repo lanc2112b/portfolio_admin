@@ -26,3 +26,15 @@ export const getPortfolioItems = () => {
     });
 
 };
+
+
+export const postPortfolioItem = (formObj, token) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.post(`/api/admin/portfolios/add`, formObj, headers)
+    .then((results) => {
+      console.log(results)
+      return results.data;
+    });
+
+};

@@ -6,6 +6,7 @@ import NewAccountPage from './components/auth/NewAccountPage';
 import LoginPage from './components/auth/LoginPage';
 import ContactItems from './components/contacts/ContactItems';
 import Portfolio from './components/portfolio/Portfolio';
+import PortfolioItem from './components/portfolio/PortfolioItem';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<MainSection element={<LoginPage />} />} />
         <Route path="/messages" element={<MainSection element={<ContactItems />} />} />
         <Route path="/portfolio" element={<MainSection element={<Portfolio />} />} />
+        <Route path="/portfolio/:id" element={<MainSection element={<PortfolioItem />} />} />
       </Routes>
       <Footer />
     </div>

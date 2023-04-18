@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../../contexts/User";
+import { postPortfolioItem } from "../../api/ApiConsumer";
 
 const PortfolioForm = () => {
+
+    const { user } = useContext(UserContext);
 
     const [expanded, setExpanded] = useState(false);
 
@@ -12,6 +16,26 @@ const PortfolioForm = () => {
         image_url: '',
         video_url: '',
     });
+
+    const resetHandler = () => {
+        setFormObj({
+            title: '',
+            description: '',
+            hosted_url: '',
+            github_url: '',
+            image_url: '',
+            video_url: '',
+        });
+        setFormErrors({
+            title: null,
+            description: null,
+            hosted_url: null,
+            github_url: null,
+            image_url: null,
+            video_url: null,
+            formErrors: null,
+        });
+    };
 
     const [formErrors, setFormErrors] = useState({
         title: null,
@@ -54,8 +78,8 @@ const PortfolioForm = () => {
                 
             } else {
 
-                if (formObj.title.length > 0 && formObj.title.length < 10) {
-                    tmpObj.title = 'Title must have more than 10 characters';
+                if (formObj.title.length > 0 && formObj.title.length < 20) {
+                    tmpObj.title = 'Title must have more than 20 characters';
                 }
 
                 if (formObj.title.length > 255) {
@@ -73,8 +97,8 @@ const PortfolioForm = () => {
 
             } else {
 
-                if (formObj.description.length > 0 && formObj.description.length < 10) {
-                    tmpObj.description = 'Description must have more than 10 characters';
+                if (formObj.description.length > 0 && formObj.description.length < 20) {
+                    tmpObj.description = 'Description must have more than 20 characters';
                 }
 
                 if (formObj.description.length > 1500) {
@@ -176,6 +200,8 @@ const PortfolioForm = () => {
 
         event.preventDefault();
 
+        const token = user.access_token;
+
         const tmpObj = { ...formErrors };
 
         tmpObj.errors = null;
@@ -190,13 +216,19 @@ const PortfolioForm = () => {
 
         setFormErrors(tmpObj);
 
-        
+        postPortfolioItem(formObj, token)
+            .then((result) => {
+                resetHandler();
 
+                // Add success message here
 
-        //console.log(formErrors);
-        //send  formObj :)
+                //console.log(result);
+            }).catch((error) => {
 
-        //console.log(Object.values(formErrors).join(''));
+                // Add error message here.
+                
+                //console.log(error);
+            });
 
     }
 
@@ -223,34 +255,39 @@ const PortfolioForm = () => {
                     <div className="w-full grid grid-cols-2 gap-4 justify-between">
                         <div className="col-span-2 flex flex-col mb-2">
                             <label htmlFor="title" className="mb-1 ms-1">Title: <span className="text-xs text-red-500">{formErrors.title}</span></label>
-                            <input type="text" maxLength={255} name="title" id="title" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.title ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
+                            <input type="text" value={formObj.title} maxLength={255} name="title" id="title" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.title ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
 
                         <div className="col-span-2 flex flex-col mb-2">
                             <label htmlFor="description" className="mb-1 ms-1">Description: <span className="text-xs text-red-500">{formErrors.description}</span></label>
-                            <textarea name="description" id="description" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.description ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}></textarea>
+                            <textarea name="description" value={formObj.description} id="description" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.description ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}>
+
+                            </textarea>
                             <span className={`ms-1 mt-1 text-xs ${formErrors.description ? "text-red-500" : "text-zinc-500"}`}>Character count: {formObj.description.length} (max: 1500)</span>
                         </div>
 
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
                             <label htmlFor="hosted_url" className="mb-1 ">Hosted URL: <span className="text-xs text-red-500">{formErrors.hosted_url}</span></label>
-                            <input type="text" name="hosted_url" id="hosted_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.hosted_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
+                            <input type="text" value={formObj.hosted_url} name="hosted_url" id="hosted_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.hosted_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
                             <label htmlFor="github_url" className="mb-1 ms-1">GitHub URL:  <span className="text-xs text-red-500">{formErrors.github_url}</span></label>
-                            <input type="text" name="github_url" id="github_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.github_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
+                            <input type="text" value={formObj.github_url} name="github_url" id="github_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.github_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
                             <label htmlFor="image_url" className="mb-1 ms-1">Image URL:  <span className="text-xs text-red-500">{formErrors.image_url}</span></label>
-                            <input type="text" name="image_url" id="image_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.image_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
+                            <input type="text" value={formObj.image_url} name="image_url" id="image_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.image_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
                             <label htmlFor="video_url" className="mb-1 ms-1">Video URL:  <span className="text-xs text-red-500">{formErrors.video_url}</span></label>
-                            <input type="text" name="video_url" id="video_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.video_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
+                            <input type="text" value={formObj.video_url} name="video_url" id="video_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.video_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                     </div>
                     <div className="w-full flex flex-row sm:justify-end items-center mb-4 mt-3">
                         <span className="me-4 text-sm font-semibold text-red-500">{formErrors.errors}</span>
+                        <button type="button" onClick={resetHandler} className="me-4 text-zinc-700 font-semibold py-1 px-3">
+                            Reset
+                        </button>
                         <button type="submit" className="w-full font-semibold text-white sm:w-fit rounded-full bg-green-500 hover:bg-green-600 shadow-md py-1 px-3">
                             <i className="me-3 fa-solid fa-folder-plus"></i>
                             Add Item

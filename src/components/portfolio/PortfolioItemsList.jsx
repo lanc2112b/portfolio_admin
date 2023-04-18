@@ -1,11 +1,11 @@
 import PortfolioForm from "./PortfolioForm";
 import PortfolioItemRow from "./PortfolioItemRow";
 
-const PortfolioItemsList = ({ list }) => {
+const PortfolioItemsList = ({ list, expanded }) => {
 
     return (
         <>
-            <PortfolioForm />
+            <PortfolioForm expanded={expanded} useMode={'add'} item={null} />
             <div className="w-full shadow-md">
                 <table className="w-full border-separate border-spacing-y-1">
                     <thead>

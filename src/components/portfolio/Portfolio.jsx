@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 
-import { getPortfolioItems } from "../../api/ApiConsumer";
+import { deletePortfolioItem, getPortfolioItems } from "../../api/ApiConsumer";
 
 import { UserContext } from "../../contexts/User";
 import PortfolioItemsList from "./PortfolioItemsList";
@@ -12,8 +12,10 @@ const Portfolio = () => {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(false);
+    
 
     const [showModal, setShowModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -35,13 +37,43 @@ const Portfolio = () => {
 
     }
 
-    const deleteHandler = (value) => {
-        console.log(value);
+    const deleteModalHandler = (value) => {
         setShowModal(true);
+        setDeleteId(value);
+    }
+
+    const deleteHandler = (value) => {
+        //console.log(value, deleteId, 'values match?');
+        //do delete: 
+        deletePortfolioItem(user.access_token, value)
+            .then((result) => {
+                if (result === 204) {
+                    //setList();
+                    const filtered = list.filter((element) => {
+                        return element.id !== value;
+                    }); 
+
+                    setList(filtered);
+                }
+            console.log(result);
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        setShowModal(false);
+        setDeleteId(null);
+        
     }
 
     const closeModalHandler = () => {
         setShowModal(false);
+    }
+
+    const setListHandler = (value) => {
+
+        setList([ ...list, value ]);
+
     }
 
     if (loading)
@@ -55,10 +87,10 @@ const Portfolio = () => {
                     Add
                 </button>
             </div>
-            <PortfolioItemsList list={list} expanded={expanded} deleteHandler={deleteHandler} />
+            <PortfolioItemsList list={list} setListHandler={setListHandler} expanded={expanded} deleteModalHandler={deleteModalHandler} />
 
             <div className={`${showModal ? '' : 'hidden'} fixed inset-0 z-50 justify-center items-center flex overflow-x-hidden overflow-y-auto outline-none focus:outline-none mx-1`}>
-                <div className="relative w-full my-6 mx-auto max-w-3xl">
+                <div className="relative w-full my-6 mx-auto max-w-xl">
                     {/*content*/}
                     <div className="border-0 rounded-lg p-5 shadow-lg relative flex flex-col w-full bg-zinc-50 outline-none focus:outline-none">
                         {/*header*/}
@@ -77,16 +109,23 @@ const Portfolio = () => {
                         </div>
                         {/*body*/}
                         <div className="relative p-6 flex-auto">
-                            Something
+                            Are you sure you want to delete this portfolio item? This action cannot be reversed. 
                         </div>
                         {/*footer*/}
                         <div className="flex items-center justify-end p-5 pe-0 border-t border-solid border-zinc-800 rounded-b">
                             <button
-                                className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-sm px-3 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                className=" text-zinc-800 font-bold uppercase text-sm px-3 py-1 outline-none focus:outline-none me-3 mb-1"
                                 type="button"
                                 onClick={closeModalHandler}
                             >
                                 Close
+                            </button>
+                            <button
+                                className="text-slate-50 bg-red-500 active:bg-red-600 hover:bg-red-600 font-bold uppercase text-sm px-3 py-1 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                type="button"
+                                onClick={() => deleteHandler(deleteId)}
+                            >
+                                Yes, Delete!
                             </button>
                         </div>
                     </div>

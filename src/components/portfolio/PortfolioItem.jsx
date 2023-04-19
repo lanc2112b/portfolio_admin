@@ -8,9 +8,8 @@ const PortfolioItem = () => {
     /* const [itemId, setItemId] = useState(null); */
     const { id } = useParams();
 
-    // TODO: On update in form, update this item, to reflect any changes!
-    // Hmmm, returned result on update will have a lot of stuff not needed in this!
-    const [item, setItem] = useState({
+    const [item, setItem] = useState({});
+    const [formParts, setFormParts] = useState({
         title: '',
         description: '',
         hosted_url: '',
@@ -27,7 +26,16 @@ const PortfolioItem = () => {
         getPortfolioItem(id)
             .then((result) => {
                 setItem(result);
-                //console.log(item, 'item from set item');
+                
+                setFormParts({
+                    title: result.title,
+                    description: result.description,
+                    hosted_url: result.hosted_url,
+                    github_url: result.github_url,
+                    image_url: result.image_url,
+                    video_url: result.video_url,
+                })
+
                 setLoading(false);
             })
             .catch((error) => {
@@ -51,6 +59,7 @@ const PortfolioItem = () => {
     if (loading)
         return (<p>Loading... </p>)
     
+    /** TODO: Update this on edit: form save, yet another prop???  */
     return (
         <>
             <section id="view-portfolio-item">
@@ -65,7 +74,7 @@ const PortfolioItem = () => {
                     </button>
                 </div>
 
-                <PortfolioForm expanded={expanded} useMode={'edit'} item={item} loading={loading} />
+                <PortfolioForm expanded={expanded} useMode={'edit'} id={id} setFormParts={setFormParts} formParts={formParts} loading={loading} />
 
                 <div className="w-full grid grid-cols-12 gap-4 justify-between">
                     <img src={item.image_url} alt="portfolio item" className="col-span-12 sm:col-span-4 mt-1.5" />

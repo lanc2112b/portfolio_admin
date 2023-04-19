@@ -2,11 +2,11 @@ import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
 import { postPortfolioItem, patchPortfolioItem} from "../../api/ApiConsumer";
 
-const PortfolioForm = ({ expanded, setListHandler, useMode, item, loading }) => {
+const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFormParts, loading }) => {
 
     const { user } = useContext(UserContext);
 
-    const initial = (useMode === 'edit') ? { ...item } : {
+    const initial = formParts ? formParts : {
         title: '',
         description: '',
         hosted_url: '',
@@ -212,16 +212,20 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, item, loading }) => 
 
         const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem ;
         
-        modeFunc(formObj, token, item?.id)
+        modeFunc(formObj, token, id)
             .then((result) => {
 
                 if (useMode === 'add') {
                     
                     setListHandler(result);
-
+                    resetHandler();
                 }
-
-                resetHandler();
+                
+                if (useMode === 'edit') {
+                    
+                    setFormParts({ ...formObj });
+                }
+                
 
                 // Add success message here
 
@@ -236,8 +240,8 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, item, loading }) => 
     }
 
     //console.log(formErrors);
-    if (loading) 
-        return ( <> <p>Loading...</p> </> )
+    if (loading)
+        return (<> <p>Loading...</p> </>);
 
     return (
         <>

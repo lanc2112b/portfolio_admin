@@ -1,11 +1,11 @@
 import PortfolioForm from "./PortfolioForm";
 import PortfolioItemRow from "./PortfolioItemRow";
 
-const PortfolioItemsList = ({ list, expanded, deleteHandler }) => {
+const PortfolioItemsList = ({ list, setListHandler, expanded, deleteModalHandler }) => {
 
     return (
         <>
-            <PortfolioForm expanded={expanded} useMode={'add'} item={null} />
+            <PortfolioForm expanded={expanded} setListHandler={setListHandler} useMode={'add'} item={null} />
             <div className="w-full shadow-md">
                 <table className="w-full border-separate border-spacing-y-1">
                     <thead>
@@ -23,7 +23,7 @@ const PortfolioItemsList = ({ list, expanded, deleteHandler }) => {
                         {list.map((element) => {
                             return (
                                 <tr key={element.id} className=" border-slate-600 border-y even:bg-slate-100 odd:bg-white">
-                                    <PortfolioItemRow element={element} deleteHandler={deleteHandler} />
+                                    <PortfolioItemRow element={element} deleteModalHandler={deleteModalHandler} />
                                 </tr>
                             )
                         })}

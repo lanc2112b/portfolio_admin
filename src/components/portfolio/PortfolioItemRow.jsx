@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-const PortfolioItemRow = ({ element, deleteHandler }) => {
+const PortfolioItemRow = ({ element, deleteModalHandler }) => {
 
     const clickHandler = (value) => {
 
@@ -22,7 +22,7 @@ const PortfolioItemRow = ({ element, deleteHandler }) => {
                 </button>
             </td>
             <td className="px-3 py-2 text-center">
-                <button type="button" value={element.id} className="hover:bg-red-100 text-red-700 py-1 px-3 rounded-lg" onClick={() => deleteHandler(element.id)}>
+                <button type="button" value={element.id} className="hover:bg-red-100 text-red-700 py-1 px-3 rounded-lg" onClick={() => deleteModalHandler(element.id)}>
                     <i className="fa-solid fa-folder-minus"></i>
                 </button>
             </td>

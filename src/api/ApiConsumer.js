@@ -44,7 +44,7 @@ export const postPortfolioItem = (formObj, token) => {
   return api.post(`/api/admin/portfolios/add`, formObj, headers)
     .then((result) => {
       console.log(result)
-      return result.data;
+      return result.data.item;
     });
 
 };
@@ -59,3 +59,12 @@ export const patchPortfolioItem = (formObj, token, id) => {
     });
 
 };
+
+export const deletePortfolioItem = (token, id) => {
+  
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.delete(`/api/admin/portfolios/${id}/delete`, headers)
+    .then((result) => {
+      return result.status;
+    });
+}

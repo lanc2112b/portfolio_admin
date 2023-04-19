@@ -43,8 +43,8 @@ export const postPortfolioItem = (formObj, token) => {
   const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
   return api.post(`/api/admin/portfolios/add`, formObj, headers)
     .then((result) => {
-      console.log(result)
-      return result.data;
+      //console.log(result)
+      return result.data.item;
     });
 
 };
@@ -54,8 +54,17 @@ export const patchPortfolioItem = (formObj, token, id) => {
   const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
   return api.patch(`/api/admin/portfolios/${id}/update`, formObj, headers)
     .then((result) => {
-      console.log(result)
-      return result.data;
+      //console.log(result, "in api");
+      return result;
     });
 
 };
+
+export const deletePortfolioItem = (token, id) => {
+  
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.delete(`/api/admin/portfolios/${id}/delete`, headers)
+    .then((result) => {
+      return result.status;
+    });
+}

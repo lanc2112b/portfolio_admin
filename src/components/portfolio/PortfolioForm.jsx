@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
 import { postPortfolioItem, patchPortfolioItem} from "../../api/ApiConsumer";
 
-const PortfolioForm = ({ expanded, useMode, item, loading }) => {
+const PortfolioForm = ({ expanded, setListHandler, useMode, item, loading }) => {
 
     const { user } = useContext(UserContext);
 
@@ -214,6 +214,13 @@ const PortfolioForm = ({ expanded, useMode, item, loading }) => {
         
         modeFunc(formObj, token, item?.id)
             .then((result) => {
+
+                if (useMode === 'add') {
+                    
+                    setListHandler(result);
+
+                }
+
                 resetHandler();
 
                 // Add success message here

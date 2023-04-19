@@ -8,6 +8,8 @@ const PortfolioItem = () => {
     /* const [itemId, setItemId] = useState(null); */
     const { id } = useParams();
 
+    // TODO: On update in form, update this item, to reflect any changes!
+    // Hmmm, returned result on update will have a lot of stuff not needed in this!
     const [item, setItem] = useState({
         title: '',
         description: '',
@@ -25,7 +27,7 @@ const PortfolioItem = () => {
         getPortfolioItem(id)
             .then((result) => {
                 setItem(result);
-                console.log(item, 'item from set item');
+                //console.log(item, 'item from set item');
                 setLoading(false);
             })
             .catch((error) => {

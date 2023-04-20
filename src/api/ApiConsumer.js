@@ -79,3 +79,15 @@ export const deletePortfolioItem = (token, id) => {
       return result.status;
     });
 }
+
+
+export const postLandingItem = (formObj, token) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.post(`/api/admin/landings/add`, formObj, headers)
+    .then((result) => {
+      //console.log(result)
+      return result.data.item;
+    });
+
+};

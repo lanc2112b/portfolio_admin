@@ -112,3 +112,12 @@ export const patchLandingItem = (formObj, token, id) => {
     });
 
 };
+
+export const deleteLandingItem = (token, id) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.delete(`/api/admin/landings/${id}/delete`, headers)
+    .then((result) => {
+      return result.status;
+    });
+}

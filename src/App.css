@@ -2,3 +2,11 @@
     box-sizing: border-box;
 }
  */
+
+.error-hero-404 {
+
+    background: url('/public/compass_lost.jpg') no-repeat top center;
+    background-size: cover;
+    min-height: 70dvh;
+
+}

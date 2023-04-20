@@ -9,6 +9,7 @@ import Portfolio from './components/portfolio/Portfolio';
 import PortfolioItem from './components/portfolio/PortfolioItem';
 import LandingPage from './components/landing/LandingPage';
 import LandingViewItem from './components/landing/LandingViewItem';
+import FourOhFour from './components/errorpages/FourOhFour';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/portfolio/:id" element={<MainSection element={<PortfolioItem />} />} />
         <Route path="/landing-content" element={<MainSection element={<LandingPage />} />} />
         <Route path="/landing-content/:id" element={<MainSection element={<LandingViewItem />} />} />
+        <Route path="*" element={<MainSection element={<FourOhFour />} />} />
       </Routes>
       <Footer />
     </div>

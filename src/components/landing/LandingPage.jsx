@@ -34,16 +34,18 @@ const LandingPage = () => {
 
     return (
         <>
-            <div className="w-full shadow-md">
-                <table className="w-full border-separate border-spacing-y-1">
-                    <LandingListTableHead />
-                    <tbody>
-                        {areaList.map((element) => {
-                            return (<> <tr key={element.id}><LandingListTableRow element={element} editClickHandler={editClickHandler} /> </tr> </>)
-                        })}
-                    </tbody>
-                </table>
-            </div>
+            <section id="list-landingpage-content">
+                <div className="w-full shadow-md">
+                    <table className="w-full border-separate border-spacing-y-1">
+                        <LandingListTableHead />
+                        <tbody>
+                            {areaList.map((element) => {
+                                return (<> <tr key={element.id}><LandingListTableRow element={element} editClickHandler={editClickHandler} /> </tr> </>)
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </>
     )
 

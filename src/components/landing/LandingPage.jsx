@@ -36,10 +36,6 @@ const LandingPage = () => {
 
     }
 
-    const editClickHandler = (value) => {
-        console.log(value);
-    }
-
     if (loading)
         return (<> <p><button > loading... </button></p></>);
 
@@ -60,7 +56,7 @@ const LandingPage = () => {
                         <LandingListTableHead />
                         <tbody>
                             {areaList.map((element) => {
-                                return (<tr key={element.id}><LandingListTableRow element={element} editClickHandler={editClickHandler} /></tr>)
+                                return (<tr key={element.id}><LandingListTableRow element={element} /></tr>)
                             })}
                         </tbody>
                     </table>

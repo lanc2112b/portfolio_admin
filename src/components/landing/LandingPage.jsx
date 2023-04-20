@@ -45,6 +45,7 @@ const LandingPage = () => {
                         </tbody>
                     </table>
                 </div>
+                {/**  Add content / FP preview here. Demonstrates which section is to be edited */}
             </section>
         </>
     )

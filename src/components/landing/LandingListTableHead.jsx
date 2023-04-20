@@ -7,6 +7,7 @@ const LandingListTableHead = () => {
                     <th className="text-left p-3">Area Title: </th>
                     <th className="text-left p-3">Content Title</th>
                     <th className="text-center text-xl p-3"><i className="fa-solid fa-file-pen"></i></th>
+                    <th className="text-center text-xl p-3"><i className="fa-solid fa-trash"></i></th>
                 </tr>
             </thead>
         </>

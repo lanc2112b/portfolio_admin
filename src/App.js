@@ -8,6 +8,7 @@ import ContactItems from './components/contacts/ContactItems';
 import Portfolio from './components/portfolio/Portfolio';
 import PortfolioItem from './components/portfolio/PortfolioItem';
 import LandingPage from './components/landing/LandingPage';
+import LandingViewItem from './components/landing/LandingViewItem';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/portfolio" element={<MainSection element={<Portfolio />} />} />
         <Route path="/portfolio/:id" element={<MainSection element={<PortfolioItem />} />} />
         <Route path="/landing-content" element={<MainSection element={<LandingPage />} />} />
+        <Route path="/landing-content/:id" element={<MainSection element={<LandingViewItem />} />} />
       </Routes>
       <Footer />
     </div>

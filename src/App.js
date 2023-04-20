@@ -7,6 +7,7 @@ import LoginPage from './components/auth/LoginPage';
 import ContactItems from './components/contacts/ContactItems';
 import Portfolio from './components/portfolio/Portfolio';
 import PortfolioItem from './components/portfolio/PortfolioItem';
+import LandingPage from './components/landing/LandingPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/messages" element={<MainSection element={<ContactItems />} />} />
         <Route path="/portfolio" element={<MainSection element={<Portfolio />} />} />
         <Route path="/portfolio/:id" element={<MainSection element={<PortfolioItem />} />} />
+        <Route path="/landing-content" element={<MainSection element={<LandingPage />} />} />
       </Routes>
       <Footer />
     </div>

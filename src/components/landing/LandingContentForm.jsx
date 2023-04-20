@@ -22,9 +22,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
     }
 
     const [formObj, setFormObj] = useState(initial);
-    
-    console.log(formObj);
-    
+
     const formHandler = (event) => {
         event.preventDefault();
 

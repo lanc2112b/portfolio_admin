@@ -22,7 +22,7 @@ const LandingViewItem = () => {
         getLandingPageItem(id)
             .then((result) => {
                 setItem({ ...result });
-                console.log(result, 'returned result')
+
                 setFormParts({
                     area_title: result?.area_title,
                     area_content_title: result?.area_content_title,
@@ -36,7 +36,7 @@ const LandingViewItem = () => {
                 console.log(error);
             })
 
-    },[]);
+    },[id]);
 
     if (loading)
         return (<> <p><button > loading... </button></p></>);
@@ -44,7 +44,7 @@ const LandingViewItem = () => {
     return (
         <>
             <section id="list-landingpage-content">
-
+                <p className="hidden"> Editing: {item.id}</p> {/** TODO: Until the public FE exists, and a view of the FP exists */}
                 <LandingContentForm expanded={true} formMode={'edit'} id={id} formParts={formParts} setFormParts={setFormParts} loading={loading} />
 
             </section>

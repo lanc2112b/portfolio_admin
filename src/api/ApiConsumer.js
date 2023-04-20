@@ -17,6 +17,17 @@ export const getContactItems = (token) => {
   
 };
 
+export const getLandingPageItems = () => {
+  //["Authorization"] = `Bearer ${token}`;
+
+  return api.get(`/api/landings/index`)
+    .then((results) => {
+      //console.log(results)
+      return results.data;
+    });
+
+};
+
 export const getPortfolioItems = () => {
 
   return api.get(`/api/portfolios/index`)

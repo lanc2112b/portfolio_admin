@@ -65,8 +65,6 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
 
             tmpObj.title = null;
 
-            
-
             if (!formObj.title) {
                 tmpObj.title = 'Title is required';
                 

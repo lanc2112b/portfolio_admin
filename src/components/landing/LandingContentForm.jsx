@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
-import {postLandingItem} from "../../api/ApiConsumer";
+import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
 
-const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
+const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts, setFormParts, loading }) => {
     
     const { user } = useContext(UserContext);
 
@@ -14,7 +14,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
         errors: null,
     });
 
-    const initial = {
+    const initial = formParts ? { ...formParts } : {
         area_title: '',
         area_content_title: '',
         area_content: '',
@@ -23,6 +23,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
 
     const [formObj, setFormObj] = useState(initial);
     
+    console.log(formObj);
     
     const formHandler = (event) => {
         event.preventDefault();
@@ -40,7 +41,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
 
         }
 
-        const modeFunc = (formMode === 'add') ? postLandingItem : '';
+        const modeFunc = (formMode === 'add') ? postLandingItem : patchLandingItem;
         
         modeFunc(formObj, token, id)
             .then((result) => {
@@ -53,18 +54,13 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
 
                 if (formMode === 'edit') {
 
-                    //setFormParts({ ...formObj });
+                    setFormParts({ ...formObj });
                 }
 
-
-                // Add success message here
-
-                //console.log(result);
             }).catch((error) => {
 
-                // Add error message here.
+                console.log(error);
 
-                //console.log(error);
             });
 
     }
@@ -182,7 +178,9 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
         });
     }
 
-
+    if (loading)
+        return (<> <p>Loading...</p> </>);
+    
     return (
         <>
             <div className={`px-3 pt-0 mb-6 overflow-hidden transition-[max-height] duration-500 ${!expanded ? "ease-in" : "ease-out"} ${expanded ? "max-h-max" : "max-h-0"}`}>
@@ -201,7 +199,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler }) => {
                             <textarea name="area_content" value={formObj.area_content} id="area_content" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.area_content ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}>
 
                             </textarea>
-                            <span className={`ms-1 mt-1 text-xs ${formErrors.area_content ? "text-red-500" : "text-zinc-500"}`}>Character count: {formObj.area_content.length} (max: 3000)</span>
+                            <span className={`ms-1 mt-1 text-xs ${formErrors.area_content ? "text-red-500" : "text-zinc-500"}`}>Character count: {formObj.area_content?.length} (max: 3000)</span>
                         </div>
                         <div className="col-span-12 flex flex-col mb-2">
                             <label htmlFor="area_content_image" className="mb-1 ms-1">Content Image (URL): <span className="text-xs text-red-500">{formErrors.area_content_image}</span></label>

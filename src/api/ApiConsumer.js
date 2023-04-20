@@ -28,6 +28,16 @@ export const getLandingPageItems = () => {
 
 };
 
+export const getLandingPageItem = (id) => {
+  
+  return api.get(`/api/landings/${id}/view`)
+    .then((result) => {
+      //console.log(results)
+      return result.data.item;
+    });
+
+}
+
 export const getPortfolioItems = () => {
 
   return api.get(`/api/portfolios/index`)
@@ -88,6 +98,17 @@ export const postLandingItem = (formObj, token) => {
     .then((result) => {
       //console.log(result)
       return result.data.item;
+    });
+
+};
+
+export const patchLandingItem = (formObj, token, id) => {
+
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.patch(`/api/admin/landings/${id}/update`, formObj, headers)
+    .then((result) => {
+      //console.log(result, "in api");
+      return result;
     });
 
 };

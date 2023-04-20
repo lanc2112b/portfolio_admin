@@ -40,7 +40,7 @@ const ContactItems = () => {
         //console.log(user, "sending as token");
         getContactItems(user.access_token)
             .then((results) => {
-                console.log(results);
+ 
                 setList(results);
                 setLoading(false);
             })

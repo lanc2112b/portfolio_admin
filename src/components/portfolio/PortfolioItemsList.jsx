@@ -11,9 +11,15 @@ const PortfolioItemsList = ({ list, setListHandler, expanded, deleteModalHandler
                     <thead>
                         <tr className="bg-slate-300">
                             <th className="text-left p-3">Title</th>
-                            <th className="text-left p-3">Hosted URL</th>
-                            <th className="text-left p-3">GitHub URL</th>
-                            <th className="text-left p-3">Date</th>
+                            <th className="text-center text-xl p-3 hidden lg:table-cell">
+                                <i className="fa-regular fa-calendar-days"></i>
+                            </th>
+                            <th className="text-center text-xl p-3 hidden md:table-cell">
+                                <i className="fa-solid fa-globe"></i>
+                            </th>
+                            <th className="text-center text-xl p-3 hidden md:table-cell">
+                                <i className="fa-brands fa-github"></i>
+                            </th>
                             <th className="text-center text-xl p-3"><i className="fa-solid fa-file-pen"></i></th>
                             <th className="text-center text-xl p-3"><i className="fa-solid fa-trash"></i></th>
                         </tr>

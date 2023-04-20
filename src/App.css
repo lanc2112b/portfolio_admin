@@ -10,3 +10,10 @@
     min-height: 70dvh;
 
 }
+
+.text-effect {
+
+    background: linear-gradient(90deg,red, blue);
+    background-clip: text;
+    color: transparent;
+}

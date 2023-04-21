@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../contexts/User";
+import { MessageContext } from "../../contexts/Message";
 import { getLandingPageItems, deleteLandingItem } from "../../api/ApiConsumer";
 import LandingListTableHead from "./LandingListTableHead";
 import LandingListTableRow from "./LandingListTableRow";
@@ -9,6 +10,9 @@ import SpinnerSmall from "../uiparts/SpinnerSmall";
 const LandingPage = () => {
 
     const { user } = useContext(UserContext);
+    const { setMessage } = useContext(MessageContext);
+
+    const [apiError, setApiError] = useState(false);
 
     const [areaList, setAreaList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -60,9 +64,28 @@ const LandingPage = () => {
 
                     setAreaList(filtered);
                 }
+                setApiError(false);
             })
             .catch((error) => {
-                console.log(error);
+                if (error.response.status === 401) {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Login Expired or Invalid',
+                        msg: 'Your login has expired or is invalid, please try logging in again',
+                        dismiss: false,
+                    });
+                } else {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Something Went Wrong',
+                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                        dismiss: false,
+                    });
+                }
+
+                setApiError(true);
             });
         setShowModal(false);
         setDeleteId(null);
@@ -73,8 +96,12 @@ const LandingPage = () => {
         setShowModal(false);
     }
 
+
+    if (apiError)
+        return (<></>);
+
     if (loading)
-        return <SpinnerSmall />
+        return <SpinnerSmall />;
 
 
     return (

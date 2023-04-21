@@ -64,7 +64,7 @@ const PortfolioItem = () => {
                 setLoading(false);
                 setApiError(true);
             })
-    }, [id]);
+    }, [id, setMessage]);
 
     const toggleExpanded = () => {
 

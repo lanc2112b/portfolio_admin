@@ -4,6 +4,7 @@ import { getLandingPageItems, deleteLandingItem } from "../../api/ApiConsumer";
 import LandingListTableHead from "./LandingListTableHead";
 import LandingListTableRow from "./LandingListTableRow";
 import LandingContentForm from "./LandingContentForm";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingPage = () => {
 
@@ -73,7 +74,7 @@ const LandingPage = () => {
     }
 
     if (loading)
-        return (<> <p><button > loading... </button></p></>);
+        return <SpinnerSmall />
 
 
     return (

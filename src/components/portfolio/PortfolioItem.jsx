@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPortfolioItem } from "../../api/ApiConsumer";
 import PortfolioForm from "./PortfolioForm";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const PortfolioItem = () => {
 
@@ -57,7 +58,7 @@ const PortfolioItem = () => {
     }
 
     if (loading)
-        return (<p>Loading... </p>)
+        return <SpinnerSmall />;
     
     /** TODO: Update this on edit: form save, yet another prop???  */
     return (

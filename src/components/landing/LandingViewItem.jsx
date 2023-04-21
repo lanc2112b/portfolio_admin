@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getLandingPageItem } from "../../api/ApiConsumer";
 import LandingContentForm from "./LandingContentForm";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingViewItem = () => {
 
@@ -39,7 +40,7 @@ const LandingViewItem = () => {
     },[id]);
 
     if (loading)
-        return (<> <p><button > loading... </button></p></>);
+        return <SpinnerSmall />
 
     return (
         <>

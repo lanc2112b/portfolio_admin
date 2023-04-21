@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { deletePortfolioItem, getPortfolioItems } from "../../api/ApiConsumer";
+import { toast } from "react-hot-toast";
+import Bread from "../uiparts/Bread";
 import { MessageContext } from "../../contexts/Message";
 import { UserContext } from "../../contexts/User";
 import PortfolioItemsList from "./PortfolioItemsList";
@@ -49,7 +51,7 @@ const Portfolio = () => {
                 setApiError(true);
             });
 
-    }, [user.access_token]);
+    }, [user.access_token, setMessage]);
 
     const toggleExpanded = () => {
 
@@ -73,6 +75,10 @@ const Portfolio = () => {
                         return element.id !== value;
                     }); 
 
+                    toast.custom(<Bread msgObj={{
+                        title: 'Deleted',
+                        msg: 'Item successfully deleted',
+                    }} />);
                     setList(filtered);
                 }
             //console.log(result);

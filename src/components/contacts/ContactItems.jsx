@@ -50,7 +50,7 @@ const ContactItems = () => {
                     setApiError(false);
                 })
                 .catch((error) => {
-                    if (error.response.status === 403) {
+                    if (error.response.status === 401) {
                         setMessage({
                             msgType: 'error',
                             showMsg: true,

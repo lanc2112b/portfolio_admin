@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getPortfolioItem } from "../../api/ApiConsumer";
+import { MessageContext } from "../../contexts/Message";
 import PortfolioForm from "./PortfolioForm";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
@@ -8,6 +9,9 @@ const PortfolioItem = () => {
 
     /* const [itemId, setItemId] = useState(null); */
     const { id } = useParams();
+    const { setMessage } = useContext(MessageContext);
+
+    const [apiError, setApiError] = useState(false);
 
     const [item, setItem] = useState({});
     const [formParts, setFormParts] = useState({
@@ -40,8 +44,25 @@ const PortfolioItem = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                console.log(error);
+                if (error.response.status === 401) {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Login Expired or Invalid',
+                        msg: 'Your login has expired or is invalid, please try logging in again',
+                        dismiss: false,
+                    });
+                } else {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Something Went Wrong',
+                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                        dismiss: false,
+                    });
+                }
                 setLoading(false);
+                setApiError(true);
             })
     }, [id]);
 
@@ -56,6 +77,9 @@ const PortfolioItem = () => {
         window.location.replace('/portfolio');
 
     }
+
+    if (apiError)
+        return (<></>);
 
     if (loading)
         return <SpinnerSmall />;

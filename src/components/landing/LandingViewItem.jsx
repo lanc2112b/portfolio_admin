@@ -59,7 +59,7 @@ const LandingViewItem = () => {
                 setApiError(true);
             })
 
-    },[id]);
+    }, [id, setMessage]);
 
     if (apiError)
         return (<></>);

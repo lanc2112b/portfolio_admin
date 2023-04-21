@@ -8,11 +8,11 @@ import ContactItemsList from "./ContactItemsList";
 const ContactItems = () => {
 
     const { user } = useContext(UserContext);
-    const {setMessage} = useContext(MessageContext)
+    const { setMessage } = useContext(MessageContext);
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [apiError, setApiError] = useState(true);
+    const [apiError, setApiError] = useState(false);
 
     const [showModal, setShowModal] = useState(false);
 

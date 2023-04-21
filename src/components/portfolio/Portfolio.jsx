@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from "react";
-
 import { deletePortfolioItem, getPortfolioItems } from "../../api/ApiConsumer";
-
+import { toast } from "react-hot-toast";
+import Bread from "../uiparts/Bread";
+import { MessageContext } from "../../contexts/Message";
 import { UserContext } from "../../contexts/User";
 import PortfolioItemsList from "./PortfolioItemsList";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
@@ -9,10 +10,12 @@ import SpinnerSmall from "../uiparts/SpinnerSmall";
 const Portfolio = () => {
 
     const { user } = useContext(UserContext);
+    const { setMessage } = useContext(MessageContext);
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(false);
+    const [apiError, setApiError] = useState(false);
     
 
     const [showModal, setShowModal] = useState(false);
@@ -27,10 +30,28 @@ const Portfolio = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                console.log(error);
+                if (error.response.status === 401) {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Login Expired or Invalid',
+                        msg: 'Your login has expired or is invalid, please try logging in again',
+                        dismiss: false,
+                    });
+                } else {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Something Went Wrong',
+                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                        dismiss: false,
+                    });
+                }
+                setLoading(false);
+                setApiError(true);
             });
 
-    }, [user.access_token]);
+    }, [user.access_token, setMessage]);
 
     const toggleExpanded = () => {
 
@@ -54,13 +75,35 @@ const Portfolio = () => {
                         return element.id !== value;
                     }); 
 
+                    toast.custom(<Bread msgObj={{
+                        title: 'Deleted',
+                        msg: 'Item successfully deleted',
+                    }} />);
                     setList(filtered);
                 }
-            console.log(result);
+            //console.log(result);
 
             })
             .catch((error) => {
-                console.log(error);
+                if (error.response.status === 401) {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Login Expired or Invalid',
+                        msg: 'Your login has expired or is invalid, please try logging in again',
+                        dismiss: false,
+                    });
+                } else {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Something Went Wrong',
+                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                        dismiss: false,
+                    });
+                }
+                setLoading(false);
+                setApiError(true);
             });
         setShowModal(false);
         setDeleteId(null);
@@ -76,6 +119,9 @@ const Portfolio = () => {
         setList([ ...list, value ]);
 
     }
+
+    if (apiError)
+        return (<></>);
 
     if (loading)
         return <SpinnerSmall />

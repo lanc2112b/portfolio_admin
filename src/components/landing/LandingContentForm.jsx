@@ -1,11 +1,17 @@
 import { useState, useContext } from "react";
+import toast from "react-hot-toast";
+import Bread from "../uiparts/Bread";
 import { UserContext } from "../../contexts/User";
+import { MessageContext } from "../../contexts/Message";
 import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts, setFormParts, loading }) => {
     
     const { user } = useContext(UserContext);
+    const { setMessage } = useContext(MessageContext);
+    
+    const [apiError, setApiError] = useState(false);
 
     const [formErrors, setFormErrors] = useState({
         area_title: null,
@@ -48,17 +54,46 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
                 if (formMode === 'add') {
 
                     setListHandler(result);
+                    toast.custom(<Bread msgObj={{
+                        title: 'Added',
+                        msg: 'Content successfully added',
+                    }} />);
                     resetHandler();
                 }
 
                 if (formMode === 'edit') {
 
                     setFormParts({ ...formObj });
+                    toast.custom(<Bread msgObj={{
+                        title: 'Updated',
+                        msg: 'Content successfully updated',
+                    }} />);
                 }
 
-            }).catch((error) => {
+                setApiError(false);
 
-                console.log(error);
+            })
+            .catch((error) => {
+
+                if (error.response.status === 401) {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Login Expired or Invalid',
+                        msg: 'Your login has expired or is invalid, please try logging in again',
+                        dismiss: false,
+                    });
+                } else {
+                    setMessage({
+                        msgType: 'error',
+                        showMsg: true,
+                        title: 'Something Went Wrong',
+                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                        dismiss: false,
+                    });
+                }
+
+                setApiError(true);
 
             });
 
@@ -178,7 +213,10 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
     }
 
     if (loading)
-        return <SpinnerSmall />
+        return <SpinnerSmall />;
+    
+    if (apiError)
+        return (<></>);
     
     return (
         <>

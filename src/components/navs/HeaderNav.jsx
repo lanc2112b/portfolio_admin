@@ -7,7 +7,7 @@ const HeaderNav = () => {
 
     const { user, setUser } = useContext(UserContext);  //user, 
     
-    const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', '');
+    //const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', '');
 
     useEffect(() => {
         const theUser = localStorage.getItem("user");
@@ -15,7 +15,7 @@ const HeaderNav = () => {
         if (theUser && !theUser.includes("undefined")) {
             setUser(JSON.parse(theUser));
 
-            if (user.refresh_at <= currentDateTime) {
+           /*  if (user.refresh_at <= currentDateTime) {
                 setUser({
                     user: {
                         first_name: null,
@@ -28,12 +28,12 @@ const HeaderNav = () => {
                 });
                 localStorage.removeItem("user");
                 window.location.replace('/login');
-            }
+            } */
         }
 
 
 
-    }, [setUser]);
+    }, [setUser]); //, currentDateTime, user.refresh_at
 
 
     const logoutHandler = () => {

@@ -1,4 +1,6 @@
 import { useState, useContext } from "react";
+import toast from "react-hot-toast";
+import Bread from "../uiparts/Bread";
 import { UserContext } from "../../contexts/User";
 import { MessageContext } from "../../contexts/Message";
 import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
@@ -52,12 +54,20 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
                 if (formMode === 'add') {
 
                     setListHandler(result);
+                    toast.custom(<Bread msgObj={{
+                        title: 'Added',
+                        msg: 'Content successfully added',
+                    }} />);
                     resetHandler();
                 }
 
                 if (formMode === 'edit') {
 
                     setFormParts({ ...formObj });
+                    toast.custom(<Bread msgObj={{
+                        title: 'Updated',
+                        msg: 'Content successfully updated',
+                    }} />);
                 }
 
                 setApiError(false);

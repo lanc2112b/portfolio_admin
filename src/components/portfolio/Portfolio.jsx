@@ -4,6 +4,7 @@ import { deletePortfolioItem, getPortfolioItems } from "../../api/ApiConsumer";
 
 import { UserContext } from "../../contexts/User";
 import PortfolioItemsList from "./PortfolioItemsList";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const Portfolio = () => {
 
@@ -77,8 +78,8 @@ const Portfolio = () => {
     }
 
     if (loading)
-        return (<><button type="button" className="text-2xl rounded-full text-cyan-100 bg-slate-500 py-3 px-4" disabled><i className="animate-spin fa-solid fa-spinner me-3"></i> Loading... </button></>)
-
+        return <SpinnerSmall />
+    
     return (
         <>
             <div className="w-full flex justify-end py-2 px-3">

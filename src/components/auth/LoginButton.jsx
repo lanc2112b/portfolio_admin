@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import useFetch from "../../hooks/useFetch";
-import SpinnerButton from '../uiparts/SpinnerButton';
+import SpinnerSmall from '../uiparts/SpinnerSmall';
 
 // https://developers.google.com/identity/gsi/web/reference/js-reference
 
@@ -34,7 +34,7 @@ const LoginButton = () => {
         <>
             {loading ?
                 <>
-                    <SpinnerButton buttonText={'Logging in'} />
+                    <SpinnerSmall />
                 </>
                 : <div id="loginDiv"></div>}
 

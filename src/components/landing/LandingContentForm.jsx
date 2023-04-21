@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
 import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts, setFormParts, loading }) => {
     
@@ -177,7 +178,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
     }
 
     if (loading)
-        return (<> <p>Loading...</p> </>);
+        return <SpinnerSmall />
     
     return (
         <>

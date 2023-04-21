@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import useFetch from "../../hooks/useFetch";
-import SpinnerButton from '../uiparts/SpinnerButton';
+import SpinnerSmall from '../uiparts/SpinnerSmall';
 
 
 const NewAccountButton = () => {
@@ -33,7 +33,7 @@ const NewAccountButton = () => {
         <>
             {loading ? (
                 <>
-                    <SpinnerButton buttonText={'Registering user'}/>
+                    <SpinnerSmall />
                 </>
             ) : (
                 <div id="signUpDiv" data-text="signup_with"></div>

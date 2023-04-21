@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
-import { postPortfolioItem, patchPortfolioItem} from "../../api/ApiConsumer";
+import { postPortfolioItem, patchPortfolioItem } from "../../api/ApiConsumer";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFormParts, loading }) => {
 
@@ -239,7 +240,7 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
 
     //console.log(formErrors);
     if (loading)
-        return (<> <p>Loading...</p> </>);
+        return <SpinnerSmall />;
 
     return (
         <>

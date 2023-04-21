@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/User";
+import { toast } from "react-hot-toast";
 import { MessageContext } from "../../contexts/Message";
 import { postPortfolioItem, patchPortfolioItem } from "../../api/ApiConsumer";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
+import Bread from "../uiparts/Bread";
 
 const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFormParts, loading }) => {
 
@@ -221,11 +223,19 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                 if (useMode === 'add') {
                     
                     setListHandler(result);
+                    toast.custom(<Bread msgObj={{
+                        title: 'Added',
+                        msg: 'Item successfully updated',
+                    }} />);
                     resetHandler();
                 }
                 
                 if (useMode === 'edit') {
                     
+                    toast.custom(<Bread msgObj={{
+                        title: 'Updated',
+                        msg: 'Item successfully updated',
+                    }} />);
                     setFormParts({ ...formObj });
                 }
                 

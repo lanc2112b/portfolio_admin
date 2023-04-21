@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../contexts/User";
 import { MessageContext } from "../../contexts/Message";
 import { getLandingPageItems, deleteLandingItem } from "../../api/ApiConsumer";
+import { toast } from "react-hot-toast";
+import Bread from "../uiparts/Bread";
 import LandingListTableHead from "./LandingListTableHead";
 import LandingListTableRow from "./LandingListTableRow";
 import LandingContentForm from "./LandingContentForm";
@@ -63,6 +65,10 @@ const LandingPage = () => {
                     });
 
                     setAreaList(filtered);
+                    toast.custom(<Bread msgObj={{
+                        title: 'Deleted',
+                        msg: 'Content successfully deleted',
+                    }} />);
                 }
                 setApiError(false);
             })

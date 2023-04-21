@@ -1,15 +1,18 @@
 import { useEffect, useState, useContext } from "react";
-import { getContactItems } from "../../api/ApiConsumer";
 import { UserContext } from "../../contexts/User";
+import { MessageContext } from "../../contexts/Message";
+import { getContactItems } from "../../api/ApiConsumer";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 import ContactItemsList from "./ContactItemsList";
 
 const ContactItems = () => {
 
     const { user } = useContext(UserContext);
+    const {setMessage} = useContext(MessageContext)
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [apiError, setApiError] = useState(true);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -37,21 +40,44 @@ const ContactItems = () => {
 
     useEffect(() => {
         setLoading(true);
-        //console.log(user, "sending as token");
-        getContactItems(user.access_token)
-            .then((results) => {
+        setApiError(false);
+        if (user.access_token) {
+            getContactItems(user.access_token)
+                .then((results) => {
  
-                setList(results);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-    }, [user.access_token]);
+                    setList(results);
+                    setLoading(false);
+                    setApiError(false);
+                })
+                .catch((error) => {
+                    if (error.response.status === 403) {
+                        setMessage({
+                            msgType: 'error',
+                            showMsg: true,
+                            title: 'Login Expired or Invalid',
+                            msg: 'Your login has expired or is invalid, please try logging in again',
+                            dismiss: false,
+                        });
+                    } else {
+                        setMessage({
+                            msgType: 'error',
+                            showMsg: true,
+                            title: 'Something Went Wrong',
+                            msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                            dismiss: false,
+                        });
+                    }
+                    setLoading(false);
+                    setApiError(true);
+                });
+        }
+    }, [user.access_token, setMessage]);
 
     if (loading)
         return <SpinnerSmall />
+    
+    if (apiError)
+        return (<></>);
 
     return (
         <>

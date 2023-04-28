@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import NewAccountButton from './NewAccountButton';
 
 const NewAccountPage = () => {

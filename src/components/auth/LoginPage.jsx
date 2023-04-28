@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import LoginButton from './LoginButton';
 
 const LoginPage = () => {
+
+    useEffect(() => {
+        document.title = 'Login';
+    });
 
     return (
         <>

@@ -2,6 +2,10 @@ import NewAccountButton from './NewAccountButton';
 
 const NewAccountPage = () => {
 
+    useEffect(() => {
+        document.title = 'Register';
+    })
+
     return (
         <>
             <section id="registration-page" className="w-full flex flex-col grow items-center p-8">

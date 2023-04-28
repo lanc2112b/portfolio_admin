@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import ContactItemRow from "./ContactItemRow";
 
 const ContactItemsList = ({ list, modalHandler }) => {
+
+    useEffect(() => {
+        document.title = 'Messages';
+    });
 
     return (
         <>

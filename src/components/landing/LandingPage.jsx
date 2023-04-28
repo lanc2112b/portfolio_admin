@@ -11,6 +11,10 @@ import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingPage = () => {
 
+    useEffect(() => {
+        document.title = 'Admin Panel';
+    });
+
     const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
 

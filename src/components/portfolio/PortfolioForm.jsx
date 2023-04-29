@@ -77,8 +77,8 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                 
             } else {
 
-                if (formObj.title.length > 0 && formObj.title.length < 20) {
-                    tmpObj.title = 'Title must have more than 20 characters';
+                if (formObj.title.length > 0 && formObj.title.length < 6) {
+                    tmpObj.title = 'Title must have more than 6 characters';
                 }
 
                 if (formObj.title.length > 255) {
@@ -100,8 +100,8 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                     tmpObj.description = 'Description must have more than 20 characters';
                 }
 
-                if (formObj.description.length > 1500) {
-                    tmpObj.description = 'Description must have less than 255 characters';
+                if (formObj.description.length > 5000) {
+                    tmpObj.description = 'Description must have less than 5000 characters';
                 }
             }
         }
@@ -285,7 +285,7 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                             <textarea name="description" value={formObj.description} id="description" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.description ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}>
 
                             </textarea>
-                            <span className={`ms-1 mt-1 text-xs ${formErrors.description ? "text-red-500" : "text-zinc-500"}`}>Character count: {formObj.description.length} (max: 1500)</span>
+                            <span className={`ms-1 mt-1 text-xs ${formErrors.description ? "text-red-500" : "text-zinc-500"}`}>Character count: {formObj.description.length} (max: 5000)</span>
                         </div>
 
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">

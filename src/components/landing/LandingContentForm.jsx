@@ -193,7 +193,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
                     tmpObj.area_content_image = 'URL must have less than 255 characters';
                 }
 
-                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp)$/g.test(formObj.area_content_image)) {
+                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp|svg)$/g.test(formObj.area_content_image)) {
                     tmpObj.area_content_image = 'URL must be a valid image resource';
                 }
             }

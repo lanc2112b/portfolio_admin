@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: `${__dirname}/.env.development` });
 let SftpClient = require('ssh2-sftp-client');
 
 const config = {

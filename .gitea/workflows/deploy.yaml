@@ -17,14 +17,11 @@ jobs:
           SFTP_USER: ${{ secrets.SFTP_USER }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
-      - name: create env production
         run: |
           touch .env.production
           echo REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID" >> .env.production
           echo REACT_APP_API_URL="$REACT_APP_API_URL" >> .env.production
           cat .env.production
-      - name: create env development
-        run: |
           touch .env.development
           SFTP_SERVER="$SFTP_SERVER" >> .env.development
           SFTP_USER="$SFTP_USER" >> .env.development

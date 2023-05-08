@@ -6,35 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "The name of your branch is ${{ gitea.ref }} and your repository is ${{ gitea.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "The ${{ gitea.repository }} repository has been cloned to the runner."
-      - name: Create env vars
-        env:
-          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          SFTP_SERVER: ${{ secrets.SFTP_SERVER }}
-          SFTP_USER: ${{ secrets.SFTP_USER }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1.3
+      with:
+        envkey_DEBUG: false
+        envkey_SOME_API_KEY: "123456abcdef"
+        envkey_SECRET_KEY: ${{ secrets.SFTP_HOST }}
+        some_other_variable: foobar
+        file_name: .env
+        fail_on_empty: false
+      - name: Get file contents
         run: |
-          touch .env.production
-          echo REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID" >> .env.production
-          echo REACT_APP_API_URL="$REACT_APP_API_URL" >> .env.production
-          cat .env.production
-          touch .env.development
-          SFTP_SERVER="$SFTP_SERVER" >> .env.development
-          SFTP_USER="$SFTP_USER" >> .env.development
-          SFTP_PASSWORD="$SFTP_PASSWORD" >> .env.development
-          SFTP_PORT="$SFTP_PORT" >> .env.development
-          cat .env.development      
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
-      - name: View build folder
-        run: |
-          ls -a ${{ gitea.workspace }}/build
-      - name: Deploy
-        run: npm run deploy
+          cat .env
       - run: echo "This job's status is ${{ gitea.status }}."

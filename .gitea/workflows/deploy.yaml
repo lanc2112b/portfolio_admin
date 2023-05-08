@@ -21,7 +21,6 @@ jobs:
           SFTP_PORT=${{ secrets.SFTP_PORT }} >> .env.development
           cat .env.production
           cat .env.development
-
       - name: Install dependencies
         run: npm install
       - name: Build

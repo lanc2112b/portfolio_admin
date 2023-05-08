@@ -24,12 +24,14 @@ jobs:
           echo "SFTP_USER=$SFTP_USER" >> .env.development
           echo "SFTP_PASSWORD=$SFTP_PASSWORD" >> .env.development
           echo "SFTP_PORT=$SFTP_PORT" >> .env.development
+          echo "SFTP_URL=$SFTP_URL" >> .env.development
           echo "LOCAL_PATH=$LOCAL_PATH" >> .env.development
         env:
           SFTP_SERVER: ${{ secrets.SFTP_SERVER }}
           SFTP_USER: ${{ secrets.SFTP_USER }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_URL: ${{ secrets.SFTP_URL }}
           LOCAL_PATH: ${{ secrets.LOCAL_PATH }}
       - name: Install dependencies
         run: npm install

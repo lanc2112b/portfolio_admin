@@ -17,5 +17,5 @@ jobs:
         fail_on_empty: false
       - name: Get file contents
         run: |
-          cat .env
+        cat .env
       - run: echo "This job's status is ${{ gitea.status }}."

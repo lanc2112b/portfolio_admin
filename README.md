@@ -15,7 +15,12 @@ Axios
 Luxon   
 Classnames (not really needed, I'll probably remove this at some point).  
 React router dom  
-Tailwind forms plugin.  
+Tailwind forms plugin.   
+
+
+##### Planned changes  
+
+Adding portfolio items - make optional 'hosted_url' & 'github_url', not all posts will need them afterall.   
 
 
  

@@ -17,11 +17,13 @@ jobs:
           SFTP_USER: ${{ secrets.SFTP_USER }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      - name: create env production
         run: |
           touch .env.production
           echo REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID" >> .env.production
           echo REACT_APP_API_URL="$REACT_APP_API_URL" >> .env.production
           cat .env.production
+      - name: create env development
         run: |
           touch .env.development
           SFTP_SERVER="$SFTP_SERVER" >> .env.development
@@ -29,4 +31,13 @@ jobs:
           SFTP_PASSWORD="$SFTP_PASSWORD" >> .env.development
           SFTP_PORT="$SFTP_PORT" >> .env.development
           cat .env.development
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: View build folder
+        run: |
+          ls -a ${{ gitea.workspace }}/build
+      - name: Deploy
+        run: npm run deploy
       - run: echo "This job's status is ${{ gitea.status }}."

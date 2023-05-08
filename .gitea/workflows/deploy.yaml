@@ -27,7 +27,8 @@ jobs:
           SFTP_USER="$SFTP_USER" >> .env.development
           SFTP_PASSWORD="$SFTP_PASSWORD" >> .env.development
           SFTP_PORT="$SFTP_PORT" >> .env.development
-          cat .env.development      - name: Install dependencies
+          cat .env.development      
+      - name: Install dependencies
         run: npm install
       - name: Build
         run: npm run build

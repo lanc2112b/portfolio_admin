@@ -2,18 +2,19 @@ name: Build and Deploy
 run-name: ${{ gitea.actor }} Running build and deploy
 on: [push]
 jobs:
-  Explore-Gitea-Actions:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - run: echo "The name of your branch is ${{ gitea.ref }} and your repository is ${{ gitea.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: echo "The ${{ gitea.repository }} repository has been cloned to the runner."
+        env:
+          SECRETS: ${{ toJSON(secrets) }}
       - name: Install dependencies
         run: npm install
       - name: Build
         run: npm run build
-      - name: List files in the repository
-        run: |
-          ls ${{ gitea.workspace }}
+      - name: Deploy
+        run: npm run deploy      
       - run: echo "This job's status is ${{ gitea.status }}."

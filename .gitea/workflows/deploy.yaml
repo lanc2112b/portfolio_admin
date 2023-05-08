@@ -27,7 +27,7 @@ jobs:
         run: npm run build
         name: View build folder
         run: |
-          ls ${{ gitea.workspace }}/build
+          ls -a ${{ gitea.workspace }}/build
       - name: Deploy
-        run: npm run deploy      
+        run: npm run deploy
       - run: echo "This job's status is ${{ gitea.status }}."

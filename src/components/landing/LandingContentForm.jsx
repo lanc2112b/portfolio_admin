@@ -227,15 +227,15 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
                 <form onSubmit={formHandler}>
                     <div className="w-full grid grid-cols-12 gap-4 justify-between">
                         <div className="col-span-12 sm:col-span-4 flex flex-col mb-2">
-                            <label htmlFor="area_title" className="mb-1 ms-1">Area*: <span className="text-xs text-red-500">{formErrors.area_title}</span></label>
+                            <label htmlFor="area_title" className="mb-1 ms-1">*Area: <span className="text-xs text-red-500">{formErrors.area_title}</span></label>
                             <input type="text" value={formObj.area_title} maxLength={24} name="area_title" id="area_title" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.area_title ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-12 sm:col-span-8 flex flex-col mb-2">
-                            <label htmlFor="area_content_title" className="mb-1 ms-1">Content Title*: <span className="text-xs text-red-500">{formErrors.area_content_title}</span></label>
+                            <label htmlFor="area_content_title" className="mb-1 ms-1">*Content Title: <span className="text-xs text-red-500">{formErrors.area_content_title}</span></label>
                             <input type="text" value={formObj.area_content_title} maxLength={255} name="area_content_title" id="area_content_title" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.area_content_title ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-12 flex flex-col mb-2">
-                            <label htmlFor="area_content" className="mb-1 ms-1">Content*: <span className="text-xs text-red-500">{formErrors.area_content}</span></label>
+                            <label htmlFor="area_content" className="mb-1 ms-1">*Content: <span className="text-xs text-red-500">{formErrors.area_content}</span></label>
                             <textarea name="area_content" value={formObj.area_content} id="area_content" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.area_content ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}>
 
                             </textarea>

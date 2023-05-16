@@ -224,19 +224,22 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                 if (useMode === 'add') {
                     
                     setListHandler(result);
-                    toast.custom(<Bread msgObj={{
+                    const msg = {
+                        type: 'success',
                         title: 'Added',
                         msg: 'Item successfully updated',
-                    }} />);
+                    }
+                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
                     resetHandler();
                 }
                 
                 if (useMode === 'edit') {
-                    
-                    toast.custom(<Bread msgObj={{
+                    const msg = {
+                        type: 'success',
                         title: 'Updated',
                         msg: 'Item successfully updated',
-                    }} />);
+                    }
+                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
                     setFormParts({ ...formObj });
                 }
                 

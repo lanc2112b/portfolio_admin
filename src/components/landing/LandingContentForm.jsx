@@ -7,10 +7,10 @@ import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts, setFormParts, loading }) => {
-    
+
     const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
-    
+
     const [apiError, setApiError] = useState(false);
 
     const [formErrors, setFormErrors] = useState({
@@ -31,43 +31,58 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
     const [formObj, setFormObj] = useState(initial);
 
     const formHandler = (event) => {
+
         event.preventDefault();
 
         const token = user.access_token;
-        const tmpObj = { ...formErrors };
 
-        tmpObj.errors = null; 
+        setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
 
-        if (Object.values(formErrors).join('')) {
+        if (!formObj.area_title || !formObj.area_content_title || !formObj.area_content) {
 
-            tmpObj.errors = "Check form errors, highlighted in red."
-            setFormErrors(tmpObj);
+            const msg = {
+                type: 'warning',
+                title: 'Empty Form',
+                msg: 'Fill in the form and try again',
+            }
+
+            toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            return;
+        }
+
+        if (Object.values(formErrors).join('') !== '') {
+
+            setFormErrors((currentObj) => { return { ...currentObj, errors: 'Check form errors, highlighted in red' } });
             return;
 
         }
 
         const modeFunc = (formMode === 'add') ? postLandingItem : patchLandingItem;
-        
+
         modeFunc(formObj, token, id)
             .then((result) => {
 
                 if (formMode === 'add') {
 
                     setListHandler(result);
-                    toast.custom(<Bread msgObj={{
+                    const msg = {
+                        type: 'success',
                         title: 'Added',
                         msg: 'Content successfully added',
-                    }} />);
+                    };
+                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
                     resetHandler();
                 }
 
                 if (formMode === 'edit') {
 
                     setFormParts({ ...formObj });
-                    toast.custom(<Bread msgObj={{
+                    const msg = {
+                        type: 'success',
                         title: 'Updated',
                         msg: 'Content successfully updated',
-                    }} />);
+                    };
+                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
                 }
 
                 setApiError(false);
@@ -101,105 +116,93 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
     const changeHandler = (event) => {
 
-        const currentTrack = event.target.name;
-        const currentVal = event.target.value;
+        const { name, value } = event.target;
 
-        const newObj = { ...formObj };
+        validateFormItem(name, value);
 
-        newObj[currentTrack] = currentVal;
-
-        validateFormItem(currentTrack);
-
-        setFormObj(newObj);
-
+        setFormObj((currentObj) => { return { ...currentObj, [name]: value } });
 
     }
 
-    function validateFormItem(name) { 
-
-        const tmpObj = { ...formErrors };
-
-        tmpObj.errors = null;
+    function validateFormItem(name, value) {
 
         if (name === 'area_title') {
 
-            tmpObj.area_title = null;
+            setFormErrors((currErrs) => { return { ...currErrs, area_title: '' } });
 
-            if (!formObj.area_title) {
-                tmpObj.area_title = 'Title is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, area_title: 'Title is required' } });
 
             } else {
 
-                if (formObj.area_title.length > 0 && formObj.area_title.length < 4) {
-                    tmpObj.area_title = 'Title must have more than 4 characters';
+                if (value.length > 0 && value.length < 4) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_title: 'Title must have more than 4 characters' } });
                 }
 
-                if (formObj.area_title.length > 24) {
-                    tmpObj.area_title = 'Title exceeds max 24 characters';
+                if (value.length > 24) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_title: 'Title exceeds max 24 characters' } });
                 }
             }
         }
 
         if (name === 'area_content_title') {
 
-            tmpObj.area_content_title = null;
+            setFormErrors((currErrs) => { return { ...currErrs, area_content_title: '' } });
 
-            if (!formObj.area_content_title) {
-                tmpObj.area_content_title = 'Content title is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, area_content_title: 'Content title is required' } });
 
             } else {
 
-                if (formObj.area_content_title.length > 0 && formObj.area_content_title.length < 12) {
-                    tmpObj.area_content_title = 'Content title must have more than 12 characters';
+                if (value.length > 0 && value.length < 12) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content_title: 'Content title must have more than 12 characters' } });
                 }
 
-                if (formObj.area_content_title.length > 255) {
-                    tmpObj.area_content_title = 'Content title exceeds max 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content_title: 'Content title exceeds max 255 characters' } });
                 }
             }
         }
 
         if (name === 'area_content') {
 
-            tmpObj.area_content = null;
+            setFormErrors((currErrs) => { return { ...currErrs, area_content: '' } });
 
-            if (!formObj.area_content) {
-                tmpObj.area_content = 'Content is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, area_content: 'Content is required' } });
 
             } else {
 
-                if (formObj.area_content.length > 0 && formObj.area_content.length < 20) {
-                    tmpObj.area_content = 'Content must have more than 20 characters';
+                if (value.length > 0 && value.length < 20) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content: 'Content must have more than 20 characters' } });
                 }
 
-                if (formObj.area_content.length > 3000) {
-                    tmpObj.area_content = 'Content exceeds max 3000 characters';
+                if (value.length > 3000) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content: 'Content exceeds max 3000 characters' } });
                 }
             }
         }
 
         if (name === 'area_content_image') {
 
-            tmpObj.area_content_image = null;
+            setFormErrors((currErrs) => { return { ...currErrs, area_content_image: '' } });
 
-            if (formObj.area_content_image) {
+            if (value) {
 
-
-                if (formObj.area_content_image.length > 0 && formObj.area_content_image.length < 10) {
-                    tmpObj.area_content_image = 'URL must have more than 10 characters';
+                if (value.length > 0 && value.length < 10) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content_image: 'URL must have more than 10 characters' } });
                 }
 
-                if (formObj.area_content_image.length > 255) {
-                    tmpObj.area_content_image = 'URL must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content_image: 'URL must have less than 255 characters' } });
                 }
 
-                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp|svg)$/g.test(formObj.area_content_image)) {
-                    tmpObj.area_content_image = 'URL must be a valid image resource';
+                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp|svg)$/g.test(value)) {
+                    setFormErrors((currErrs) => { return { ...currErrs, area_content_image: 'URL must be a valid image resource' } });
                 }
             }
         }
 
-        setFormErrors(tmpObj);
     }
 
     const resetHandler = () => {
@@ -214,10 +217,10 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
     if (loading)
         return <SpinnerSmall />;
-    
+
     if (apiError)
         return (<></>);
-    
+
     return (
         <>
             <div className={`px-3 pt-0 mb-6 overflow-hidden transition-[max-height] duration-500 ${!expanded ? "ease-in" : "ease-out"} ${expanded ? "max-h-max" : "max-h-0"}`}>
@@ -262,7 +265,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
                     </div>
                 </form>
                 <hr className="" />
-            </div>        
+            </div>
         </>
     );
 }

@@ -48,151 +48,143 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
         formErrors: null,
     });
 
-//errors: null,
-
     const changeHandler = (event) => {
         
-        const currentTrack = event.target.name;
-        const currentVal = event.target.value;
-        const newObj = { ...formObj };
+        const { name, value } = event.target;
 
-        newObj[currentTrack] = currentVal;
-        setFormObj(newObj);
+        validateFormItem(name, value);
 
-        validateFormItem(currentTrack);
+        setFormObj((currentObj) => { return { ...currentObj, [name]: value } });
+
     }
     
-    function validateFormItem(name) {
-        
-        const tmpObj = { ...formErrors };
-        
-        tmpObj.errors = null;
+    function validateFormItem(name, value) {
         
         if (name === 'title') {
 
-            tmpObj.title = null;
+            setFormErrors((currErrs) => { return { ...currErrs, title: '' } });
 
-            if (!formObj.title) {
-                tmpObj.title = 'Title is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, title: 'Title is required' } });
                 
             } else {
 
-                if (formObj.title.length > 0 && formObj.title.length < 6) {
-                    tmpObj.title = 'Title must have more than 6 characters';
+                if (value.length > 0 && value.length < 6) {
+                    setFormErrors((currErrs) => { return { ...currErrs, title: 'Title must have more than 6 characters' } });
                 }
 
-                if (formObj.title.length > 255) {
-                    tmpObj.title = 'Title must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, title: 'Title must have less than 255 characters' } });
                 }
             }
         }
 
         if (name === 'description') {
 
-            tmpObj.description = null;
+            setFormErrors((currErrs) => { return { ...currErrs, description: '' } });
 
-            if (!formObj.description) {
-                tmpObj.description = 'Description is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, description: 'Description is required' } });
 
             } else {
 
-                if (formObj.description.length > 0 && formObj.description.length < 20) {
-                    tmpObj.description = 'Description must have more than 20 characters';
+                if (value.length > 0 && value.length < 20) {
+                    setFormErrors((currErrs) => { return { ...currErrs, description: 'Description must have more than 20 characters' } });
                 }
 
-                if (formObj.description.length > 15000) {
-                    tmpObj.description = 'Description must have less than 15000 characters';
+                if (value.length > 15000) {
+                    setFormErrors((currErrs) => { return { ...currErrs, description: 'Description must have less than 15000 characters' } });
                 }
             }
         }
 
         if (name === 'hosted_url') {
 
-            tmpObj.hosted_url = null;
+            setFormErrors((currErrs) => { return { ...currErrs, hosted_url: '' } });
 
-            if (!formObj.hosted_url) {
-                tmpObj.hosted_url = 'A URL is required';
+            if (!value) {
+                setFormErrors((currErrs) => { return { ...currErrs, hosted_url: 'A URL is required' } });
 
             } else {
 
-                if (formObj.hosted_url.length > 0 && formObj.hosted_url.length < 10) {
-                    tmpObj.hosted_url = 'URL must have more than 10 characters';
+                if (value.length > 0 && value.length < 10) {
+                    setFormErrors((currErrs) => { return { ...currErrs, hosted_url: 'URL must have more than 10 characters' } });
                 }
 
-                if (formObj.hosted_url.length > 255) {
-                    tmpObj.hosted_url = 'URL must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, hosted_url: 'URL must have less than 255 characters' } });
                 }
 
-                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(formObj.hosted_url)) {
-                    tmpObj.hosted_url = 'URL must be valid';
+                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(value)) {
+                    setFormErrors((currErrs) => { return { ...currErrs, hosted_url: 'URL must be valid' } });
                 }
             }
         }
 
         if (name === 'github_url') {
 
-            tmpObj.github_url = null;
+            setFormErrors((currErrs) => { return { ...currErrs, github_url: '' } });
 
-            if (formObj.github_url) {
+            if (value) {
 
-                if (formObj.github_url.length > 0 && formObj.github_url.length < 10) {
-                    tmpObj.github_url = 'URL must have more than 10 characters';
+                if (value.length > 0 && value.length < 10) {
+                    setFormErrors((currErrs) => { return { ...currErrs, github_url: 'URL must have more than 10 characters' } });
                 }
 
-                if (formObj.github_url.length > 255) {
-                    tmpObj.github_url = 'URL must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, github_url: 'URL must have less than 255 characters' } });
                 }
 
-                if (!/^(http(s?):\/\/)([-a-z0-9]{1,6}\.)?github\.com\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(formObj.github_url)) {
-                    tmpObj.github_url = 'URL must be a valid GitHub URL';
+                if (!/^(http(s?):\/\/)([-a-z0-9]{1,6}\.)?github\.com\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(value)) {
+                    setFormErrors((currErrs) => { return { ...currErrs, github_url: 'URL must be a valid GitHub URL' } });
                 }
             }
         }
         
         if (name === 'image_url') {
 
-            tmpObj.image_url = null;
+            setFormErrors((currErrs) => { return { ...currErrs, image_url: '' } });
 
-            if (!formObj.image_url) {
-                tmpObj.image_url = 'A URL is required';
+            if (!value) {
+
+                setFormErrors((currErrs) => { return { ...currErrs, image_url: 'A URL is required' } });
 
             } else {
 
-                if (formObj.image_url.length > 0 && formObj.image_url.length < 10) {
-                    tmpObj.image_url = 'URL must have more than 10 characters';
+                if (value.length > 0 && value.length < 10) {
+                    setFormErrors((currErrs) => { return { ...currErrs, image_url: 'URL must have more than 10 characters' } });
                 }
 
-                if (formObj.image_url.length > 255) {
-                    tmpObj.image_url = 'URL must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, image_url: 'URL must have less than 255 characters' } });
                 }
 
-                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp)$/g.test(formObj.image_url)) {
-                    tmpObj.image_url = 'URL must be a valid image resource';
+                if (!/^(http(s?):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)\.(jpg|jpeg|png|webp)$/g.test(value)) {
+                    setFormErrors((currErrs) => { return { ...currErrs, image_url: 'URL must be a valid image resource' } });
                 }
             }
         }
 
         if (name === 'video_url') {
 
-            tmpObj.video_url = null;
+            setFormErrors((currErrs) => { return { ...currErrs, video_url: '' } });
 
-            if (formObj.video_url) {
+            if (value) {
 
-                if (formObj.video_url.length > 0 && formObj.video_url.length < 10) {
-                    tmpObj.video_url = 'URL must have more than 10 characters';
+                if (value.length > 0 && value.length < 10) {
+                    setFormErrors((currErrs) => { return { ...currErrs, video_url: 'URL must have more than 10 characters' } });
                 }
 
-                if (formObj.video_url.length > 255) {
-                    tmpObj.video_url = 'URL must have less than 255 characters';
+                if (value.length > 255) {
+                    setFormErrors((currErrs) => { return { ...currErrs, video_url: 'URL must have less than 255 characters' } });
                 }
 
-                if (!/^(http(s?):\/\/)([-a-z0-9]{1,6}\.)?(youtube\.com|youtu.be)\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(formObj.video_url)) {
-                    tmpObj.video_url = 'URL must be a valid YouTube URL';
+                if (!/^(http(s?):\/\/)([-a-z0-9]{1,6}\.)?(youtube\.com|youtu.be)\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(value)) {
+                    setFormErrors((currErrs) => { return { ...currErrs, video_url: 'URL must be a valid YouTube URL' } });
                 }
             }
         }
 
-        setFormErrors(tmpObj);
     }
 
     const formHandler = (event) => {
@@ -201,21 +193,30 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
 
         const token = user.access_token;
 
-        const tmpObj = { ...formErrors };
+        setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
 
-        tmpObj.errors = null;
+        if (!formObj.title || !formObj.description ||
+            !formObj.hosted_url || !formObj.github_url ||
+            !formObj.image_url) {
 
-        if (Object.values(formErrors).join('')) {
+            const msg = {
+                type: 'warning',
+                title: 'Empty Form',
+                msg: 'Fill in the form and try again',
+            }
 
-            tmpObj.errors = "Check form errors, highlighted in red."
-            setFormErrors(tmpObj);
+            toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            return;
+        }
+
+        if (Object.values(formErrors).join('') !== '') {
+
+            setFormErrors((currentObj) => { return { ...currentObj, errors: 'Check form errors, highlighted in red' } });
             return;
 
         }
-
-        setFormErrors(tmpObj);
-
-        const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem ;
+ 
+        const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem;
         
         modeFunc(formObj, token, id)
             .then((result) => {

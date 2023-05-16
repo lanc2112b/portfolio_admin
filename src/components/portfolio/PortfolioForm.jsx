@@ -280,12 +280,12 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                 <form onSubmit={formHandler}>
                     <div className="w-full grid grid-cols-2 gap-4 justify-between">
                         <div className="col-span-2 flex flex-col mb-2">
-                            <label htmlFor="title" className="mb-1 ms-1">Title: <span className="text-xs text-red-500">{formErrors.title}</span></label>
+                            <label htmlFor="title" className="mb-1 ms-1">*Title: <span className="text-xs text-red-500">{formErrors.title}</span></label>
                             <input type="text" value={formObj.title} maxLength={255} name="title" id="title" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.title ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
 
                         <div className="col-span-2 flex flex-col mb-2">
-                            <label htmlFor="description" className="mb-1 ms-1">Description: <span className="text-xs text-red-500">{formErrors.description}</span></label>
+                            <label htmlFor="description" className="mb-1 ms-1">*Description: <span className="text-xs text-red-500">{formErrors.description}</span></label>
                             <textarea name="description" value={formObj.description} id="description" onChange={changeHandler} onBlur={changeHandler} cols="30" rows="4" className={`${formErrors.description ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`}>
 
                             </textarea>
@@ -293,15 +293,15 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                         </div>
 
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
-                            <label htmlFor="hosted_url" className="mb-1 ">Hosted URL: <span className="text-xs text-red-500">{formErrors.hosted_url}</span></label>
+                            <label htmlFor="hosted_url" className="mb-1 ">*Hosted URL: <span className="text-xs text-red-500">{formErrors.hosted_url}</span></label>
                             <input type="text" value={formObj.hosted_url} name="hosted_url" id="hosted_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.hosted_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
-                            <label htmlFor="github_url" className="mb-1 ms-1">GitHub URL:  <span className="text-xs text-red-500">{formErrors.github_url}</span></label>
+                            <label htmlFor="github_url" className="mb-1 ms-1">*GitHub URL:  <span className="text-xs text-red-500">{formErrors.github_url}</span></label>
                             <input type="text" value={formObj.github_url} name="github_url" id="github_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.github_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">
-                            <label htmlFor="image_url" className="mb-1 ms-1">Image URL:  <span className="text-xs text-red-500">{formErrors.image_url}</span></label>
+                            <label htmlFor="image_url" className="mb-1 ms-1">*Image URL:  <span className="text-xs text-red-500">{formErrors.image_url}</span></label>
                             <input type="text" value={formObj.image_url} name="image_url" id="image_url" onChange={changeHandler} onBlur={changeHandler} className={`${formErrors.image_url ? "border-red-300" : "border-slate-300"} rounded-md border shadow-md`} />
                         </div>
                         <div className="col-span-2 sm:col-span-1 flex flex-col mb-2">

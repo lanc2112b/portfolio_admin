@@ -108,6 +108,7 @@ const HeaderNav = () => {
                     {user.email ? 
                         <>
                             <li className="px-5 py-1 md:px-3 hover:bg-slate-100 md:hover:bg-white md:ml-3 font-semibold "><Link to="/messages" >Messages</Link></li>
+                            <li className="px-5 py-1 md:px-3 hover:bg-slate-100 md:hover:bg-white md:ml-3 font-semibold "><Link to="/logs" >Logs</Link></li>
                             <li className="px-5 py-1 md:px-3 hover:bg-slate-100 md:hover:bg-white md:ml-3 font-semibold "><Link to="/portfolio" >Portfolio</Link></li>
                             <li className="px-5 py-1 md:px-3 hover:bg-slate-100 md:hover:bg-white md:ml-3 font-semibold "><Link to="/landing-content" >FP Content</Link></li>
                             <li className="px-5 py-1 md:px-3 sm:ml-3 hover:bg-slate-100 md:hover:bg-white">

@@ -11,6 +11,7 @@ import LandingPage from './components/landing/LandingPage';
 import LandingViewItem from './components/landing/LandingViewItem';
 import FourOhFour from './components/errorpages/FourOhFour';
 import AdminLandingPage from './components/AdminLandingPage';
+import LogView from './components/logs/LogView';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<MainSection element={<NewAccountPage />} />} />
         <Route path="/login" element={<MainSection element={<LoginPage />} />} />
         <Route path="/messages" element={<MainSection element={<ContactItems />} />} />
+        <Route path="/logs" element={<MainSection element={<LogView />} />} />
         <Route path="/portfolio" element={<MainSection element={<Portfolio />} />} />
         <Route path="/portfolio/:id" element={<MainSection element={<PortfolioItem />} />} />
         <Route path="/landing-content" element={<MainSection element={<LandingPage />} />} />

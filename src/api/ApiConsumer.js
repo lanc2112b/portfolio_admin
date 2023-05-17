@@ -17,6 +17,14 @@ export const getContactItems = (token) => {
   
 };
 
+export const getLogItems = (token) => {
+  const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
+  return api.get(`/api/admin/logs/index`, headers)
+    .then((results) => {
+      return results.data;
+    });
+};
+
 export const getLandingPageItems = () => {
   //["Authorization"] = `Bearer ${token}`;
 

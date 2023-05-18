@@ -12,8 +12,10 @@ const LogItemsList = ({list}) => {
                             <th className="text-center text-xl p-3" ><i className="fa-regular fa-calendar-days"></i></th>
                             <th className="text-center text-xl p-3" ><i className="fa-solid fa-location-crosshairs"></i></th>
                             <th className="text-center text-xl p-3"><i className="fa-solid fa-bullseye"></i></th>
-                            <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-user-tie"></i></th>
-                            <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-hand-fist"></i></th>
+                            <th className="text-center text-xl p-3"><i className="fa-solid fa-people-arrows"></i></th>
+                            <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-person-military-pointing"></i></th>
+                            <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-clapperboard"></i></th>
+                            <th className="text-center text-xl p-3 hidden md:table-cell"><i className="fa-solid fa-puzzle-piece"></i></th>
                             <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-user"></i></th>
                             <th className="text-center text-xl p-3 hidden xl:table-cell"><i className="fa-solid fa-crown"></i></th>
                         </tr>

@@ -7,6 +7,7 @@ import SpinnerSmall from "../uiparts/SpinnerSmall";
 import { getLogItems } from "../../api/ApiConsumer";
 import LogItemsList from "./LogItemsList";
 import Paginator from "../uiparts/Paginator";
+import LimitFilter from "../uiparts/LimitFilter";
 
 const LogView = () => {
 
@@ -21,8 +22,6 @@ const LogView = () => {
 
     const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
-
-    const pageCount = Math.ceil(rowCount / limit);
 
     useEffect(() => {
 
@@ -57,7 +56,7 @@ const LogView = () => {
                     setApiError(true);
                 });
         }
-    }, [page, user.access_token, setMessage, setRowCount]);
+    }, [page, limit, user.access_token, setMessage, setRowCount]);
 
     if (loading)
         return <SpinnerSmall />
@@ -70,6 +69,7 @@ const LogView = () => {
     return (
         <>
             <section className="log-list">
+                <LimitFilter setLimit={setLimit} limit={limit} />
                 <LogItemsList list={list} />
                 <Paginator rowCount={rowCount} page={page} limit={limit} setPage={setPage} />
             </section>

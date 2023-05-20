@@ -1,21 +1,6 @@
 RewriteEngine On
 RewriteBase /subdirectory
 RewriteRule ^index\.html$ - [L]
-
-
-#RewriteCond %{SERVER_PORT} 80
-#RewriteRule ^(.*)$ https://www.muninn.co.uk/$1 [R,L]
-
-#RewriteCond %{HTTP_HOST} !^www\.
-#RewriteRule ^(.*)$ https://www.muninn.co.uk/$1 [R=301,L]
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://www.muninn.co.uk/$1 [L,R=301]
-
-RewriteCond %{HTTP_HOST} !^www\. [NC]
-RewriteRule ^(.*)$ https://www.muninn.co.uk/$1 [L,R=301]
-
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
@@ -27,5 +12,3 @@ RewriteRule . /index.html [L]
   AddHandler application/x-httpd-ea-php72 .php .php7 .phtml
 </IfModule>
 # php -- END cPanel-generated handler, do not edit
-##RewriteCond %{HTTP_HOST} ^muninn\.nidhoggr\.co\.uk$
-##RewriteRule ^/?$ "https\:\/\/www\.muninn\.co\.uk\/" [R=301,L]

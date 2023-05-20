@@ -23,6 +23,9 @@ const LogView = () => {
     const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
 
+    if (limit > rowCount && page > 1)
+        setPage(1);
+
     useEffect(() => {
 
         setLoading(true);

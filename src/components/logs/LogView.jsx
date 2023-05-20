@@ -1,27 +1,37 @@
 import { useEffect, useState, useContext } from "react";
+
 import { UserContext } from "../../contexts/User";
 import { MessageContext } from "../../contexts/Message";
 
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 import { getLogItems } from "../../api/ApiConsumer";
 import LogItemsList from "./LogItemsList";
+import Paginator from "../uiparts/Paginator";
 
 const LogView = () => {
 
     const [list, setList] = useState([]);
+    
+    const [rowCount, setRowCount] = useState(0);
+    const [limit, setLimit] = useState(20);
+    const [page, setPage] = useState(1);
+
     const [loading, setLoading] = useState(false);
     const [apiError, setApiError] = useState(false);
 
     const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
 
+    const pageCount = Math.ceil(rowCount / limit);
+
     useEffect(() => {
 
         setLoading(true);
         if (user.access_token) {
-            getLogItems(user.access_token)
+            getLogItems(user.access_token, page, limit)
                 .then((results) => {
-                    setList(results);
+                    setList(results[1]);
+                    setRowCount(results[0][0].total_rows);
                     setApiError(false);
                     setLoading(false);
                 })
@@ -47,7 +57,7 @@ const LogView = () => {
                     setApiError(true);
                 });
         }
-    }, [user.access_token, setMessage]);
+    }, [page, user.access_token, setMessage, setRowCount]);
 
     if (loading)
         return <SpinnerSmall />
@@ -55,10 +65,13 @@ const LogView = () => {
     if (apiError)
         return (<></>);
 
+    console.table(list);
+    
     return (
         <>
             <section className="log-list">
                 <LogItemsList list={list} />
+                <Paginator rowCount={rowCount} page={page} limit={limit} setPage={setPage} />
             </section>
         </>
     );

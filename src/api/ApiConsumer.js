@@ -17,9 +17,9 @@ export const getContactItems = (token) => {
   
 };
 
-export const getLogItems = (token) => {
+export const getLogItems = (token, page = 1, limit = 10) => {
   const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
-  return api.get(`/api/admin/logs/index`, headers)
+  return api.get(`/api/admin/logs/index?page=${page}&limit=${limit}`, headers)
     .then((results) => {
       return results.data;
     });

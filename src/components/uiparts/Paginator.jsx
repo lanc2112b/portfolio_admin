@@ -24,7 +24,6 @@ const Paginator = ({ rowCount, limit, page, setPage }) => {
 
     const pageHandler = (pageVal) => {
 
-        console.log(pageVal);
         setPage(pageVal);
 
     }

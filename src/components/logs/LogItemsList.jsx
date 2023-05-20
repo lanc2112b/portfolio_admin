@@ -1,7 +1,6 @@
 import LogItemListRow from "./LogItemListRow";
 
-const LogItemsList = ({list}) => {
-
+const LogItemsList = ({ list }) => {
 
     return (
         <>
@@ -21,7 +20,6 @@ const LogItemsList = ({list}) => {
                         </tr>
                     </thead>
                     <tbody>
-
                         {list.map((element) => {
                             return (
                                 <tr key={element.id} className="text-xs border-slate-600 border-y even:bg-slate-100 odd:bg-white">
@@ -29,7 +27,6 @@ const LogItemsList = ({list}) => {
                                 </tr>
                             )
                         })}
-
                     </tbody>
                 </table>
             </div>

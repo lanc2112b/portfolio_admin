@@ -6,6 +6,14 @@ const api = axios.create({
 
 });
 
+/* const apiRefresh = axios.create({
+
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
+  baseURL: `${process.env.REACT_APP_API_URL}/`
+
+}); */
+
 export const getContactItems = (token) => {
   //["Authorization"] = `Bearer ${token}`;
   const headers = { 'headers': { 'Authorization': `Bearer ${token}` } };
@@ -129,3 +137,16 @@ export const deleteLandingItem = (token, id) => {
       return result.status;
     });
 }
+
+
+
+
+export const getAccessToken = () => {
+
+  return api.get(`/api/admin/users/refresh`, { withCredentials: true, })
+    .then((result) => {
+      //console.log(results)
+      return result;
+    });
+
+};

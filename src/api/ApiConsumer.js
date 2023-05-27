@@ -6,13 +6,15 @@ const api = axios.create({
 
 });
 
-/* const apiRefresh = axios.create({
+export const postLogin = (credential) => {
 
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: true,
-  baseURL: `${process.env.REACT_APP_API_URL}/`
+  return api.post(`/api/admin/users/login`, { credential })
+    .then((results) => {
+      //console.log(results)
+      return results.data;
+    });
 
-}); */
+}
 
 export const getContactItems = (token) => {
   //["Authorization"] = `Bearer ${token}`;

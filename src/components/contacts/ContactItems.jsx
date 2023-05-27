@@ -41,8 +41,8 @@ const ContactItems = () => {
     useEffect(() => {
         setLoading(true);
         setApiError(false);
-        if (user.access_token) {
-            getContactItems(user.access_token)
+        if (user.token) {
+            getContactItems(user.token)
                 .then((results) => {
  
                     setList(results);
@@ -71,7 +71,7 @@ const ContactItems = () => {
                     setApiError(true);
                 });
         }
-    }, [user.access_token, setMessage]);
+    }, [user.token, setMessage]);
 
     if (loading)
         return <SpinnerSmall />

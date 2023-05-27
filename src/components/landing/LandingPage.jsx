@@ -60,7 +60,7 @@ const LandingPage = () => {
     const deleteHandler = (value) => {
         //console.log(value, deleteId, 'values match?');
         //do delete: 
-        deleteLandingItem(user.access_token, value)
+        deleteLandingItem(user.token, value)
             .then((result) => {
                 if (result === 204) {
                     //setList();

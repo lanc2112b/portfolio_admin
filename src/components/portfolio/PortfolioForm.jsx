@@ -191,7 +191,7 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
 
         event.preventDefault();
 
-        const token = user.access_token;
+        const token = user.token;
 
         setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
 

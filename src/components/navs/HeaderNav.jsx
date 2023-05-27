@@ -45,7 +45,7 @@ const HeaderNav = () => {
                 last_name: null,
                 photo_url: null,
                 email: null,
-                access_token: null,
+                token: null,
                 refresh_at: null,
             },
         });

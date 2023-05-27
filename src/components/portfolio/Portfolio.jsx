@@ -51,7 +51,7 @@ const Portfolio = () => {
                 setApiError(true);
             });
 
-    }, [user.access_token, setMessage]);
+    }, [user.token, setMessage]);
 
     const toggleExpanded = () => {
 
@@ -67,7 +67,7 @@ const Portfolio = () => {
     const deleteHandler = (value) => {
         //console.log(value, deleteId, 'values match?');
         //do delete: 
-        deletePortfolioItem(user.access_token, value)
+        deletePortfolioItem(user.token, value)
             .then((result) => {
                 if (result === 204) {
                     //setList();

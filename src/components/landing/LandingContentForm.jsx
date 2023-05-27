@@ -34,7 +34,7 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
         event.preventDefault();
 
-        const token = user.access_token;
+        const token = user.token;
 
         setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
 

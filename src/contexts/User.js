@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-export const UserContext = createContext();
+export const UserContext = createContext({});
 
 export const UserProvider = ({ children }) => {
 
@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
       last_name: null,
       photo_url: null,
       email: null,
-      access_token: null,
+      token: null,
       refresh_at: null,
     },
   };

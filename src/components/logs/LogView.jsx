@@ -14,7 +14,7 @@ const LogView = () => {
     const [list, setList] = useState([]);
     
     const [rowCount, setRowCount] = useState(0);
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
 
     const [loading, setLoading] = useState(false);
@@ -29,8 +29,8 @@ const LogView = () => {
     useEffect(() => {
 
         setLoading(true);
-        if (user.access_token) {
-            getLogItems(user.access_token, page, limit)
+        if (user.token) {
+            getLogItems(user.token, page, limit)
                 .then((results) => {
                     setList(results[1]);
                     setRowCount(results[0][0].total_rows);
@@ -59,7 +59,7 @@ const LogView = () => {
                     setApiError(true);
                 });
         }
-    }, [page, limit, user.access_token, setMessage, setRowCount]);
+    }, [page, limit, user.token, setMessage]);
 
     if (loading)
         return <SpinnerSmall />
@@ -67,8 +67,6 @@ const LogView = () => {
     if (apiError)
         return (<></>);
 
-    console.table(list);
-    
     return (
         <>
             <section className="log-list">

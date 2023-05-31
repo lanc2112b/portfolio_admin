@@ -1,17 +1,17 @@
-import { useState, useContext } from "react";
-import { UserContext } from "../../contexts/User";
+import { useState } from "react"; 
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { MessageContext } from "../../contexts/Message";
-import { postPortfolioItem, patchPortfolioItem } from "../../api/ApiConsumer";
-import SpinnerSmall from "../uiparts/SpinnerSmall";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import Bread from "../uiparts/Bread";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
 
-const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFormParts, loading }) => {
-
-    const { user } = useContext(UserContext);
-    const { setMessage } = useContext(MessageContext);
-
-    const [apiError, setApiError] = useState(false);
+const PortfolioForm = ({ expanded, setListHandler, formMode, id, formParts, setFormParts, loading }) => {
+    
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
 
     const initial = formParts ? formParts : {
         title: '',
@@ -47,6 +47,89 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
         video_url: null,
         formErrors: null,
     });
+
+
+    const formHandler = async (event) => {
+
+        event.preventDefault();
+
+        setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
+
+        if (!formObj.title || !formObj.description ||
+            !formObj.hosted_url || !formObj.github_url ||
+            !formObj.image_url) {
+
+            const msg = {
+                type: 'warning',
+                title: 'Empty Form',
+                msg: 'Fill in the form and try again',
+            }
+
+            toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            return;
+        }
+
+        if (Object.values(formErrors).join('') !== '') {
+
+            setFormErrors((currentObj) => { return { ...currentObj, errors: 'Check form errors, highlighted in red' } });
+            return;
+
+        }
+
+        //const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem;
+
+        try {
+
+            const response = (formMode === 'add')
+                ? await apiPrivate.post(`/api/admin/portfolios/add`, formObj)
+                : await apiPrivate.patch(`/api/admin/portfolios/${id}/update`, formObj);
+            
+            if (response.status === 201) {
+                setListHandler(response.data.item);
+                const msg = {
+                    type: 'success',
+                    title: 'Added',
+                    msg: 'Project content added',
+                };
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+
+            if (response.status === 204) {
+
+                setFormParts({ ...formObj });
+                const msg = {
+                    type: 'success',
+                    title: 'Updated',
+                    msg: 'Project content updated',
+                };
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+
+        } catch (error) {
+
+            //console.log(error);
+            if (error.response.status === 401) {
+                
+                navigate('/login', { state: { from: location }, replace: true });
+            } else if (error.response.status === 400) {
+
+                const msg = {
+                    type: 'warning',
+                    title: 'Failed',
+                    msg: 'Please check the form & try again',
+                }
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            } else {
+
+                const msg = {
+                    type: 'danger',
+                    title: 'Failed',
+                    msg: 'Failed to add project content',
+                }
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+        }
+    }
 
     const changeHandler = (event) => {
         
@@ -187,90 +270,6 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
 
     }
 
-    const formHandler = (event) => {
-
-        event.preventDefault();
-
-        const token = user.token;
-
-        setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
-
-        if (!formObj.title || !formObj.description ||
-            !formObj.hosted_url || !formObj.github_url ||
-            !formObj.image_url) {
-
-            const msg = {
-                type: 'warning',
-                title: 'Empty Form',
-                msg: 'Fill in the form and try again',
-            }
-
-            toast.custom(t => (<Bread msgObj={msg} t={t} />));
-            return;
-        }
-
-        if (Object.values(formErrors).join('') !== '') {
-
-            setFormErrors((currentObj) => { return { ...currentObj, errors: 'Check form errors, highlighted in red' } });
-            return;
-
-        }
- 
-        const modeFunc = (useMode === 'add') ? postPortfolioItem : patchPortfolioItem;
-        
-        modeFunc(formObj, token, id)
-            .then((result) => {
-
-                if (useMode === 'add') {
-                    
-                    setListHandler(result);
-                    const msg = {
-                        type: 'success',
-                        title: 'Added',
-                        msg: 'Item successfully updated',
-                    }
-                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
-                    resetHandler();
-                }
-                
-                if (useMode === 'edit') {
-                    const msg = {
-                        type: 'success',
-                        title: 'Updated',
-                        msg: 'Item successfully updated',
-                    }
-                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
-                    setFormParts({ ...formObj });
-                }
-                
-                setApiError(false);
-
-            }).catch((error) => {
-                if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
-                } else {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Something Went Wrong',
-                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                        dismiss: false,
-                    });
-                }
-                setApiError(true);
-            });
-
-    }
-
-    if (apiError)
-        return (<></>);
-        
     if (loading)
         return <SpinnerSmall />;
 
@@ -314,7 +313,7 @@ const PortfolioForm = ({ expanded, setListHandler, useMode, id, formParts, setFo
                         <button type="button" onClick={resetHandler} className="me-4 text-zinc-700 font-semibold py-1 px-3">
                             Reset
                         </button>
-                        {useMode === 'add' ?
+                        {formMode === 'add' ?
                         <button type="submit" className="w-full font-semibold text-white sm:w-fit rounded-full bg-green-500 hover:bg-green-600 shadow-md py-1 px-3">
                             <i className="me-3 fa-solid fa-folder-plus"></i>
                             Add Item

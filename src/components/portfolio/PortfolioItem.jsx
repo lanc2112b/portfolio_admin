@@ -1,17 +1,22 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { getPortfolioItem } from "../../api/ApiConsumer";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import { MessageContext } from "../../contexts/Message";
+
 import PortfolioForm from "./PortfolioForm";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const PortfolioItem = () => {
 
-    /* const [itemId, setItemId] = useState(null); */
     const { id } = useParams();
-    const { setMessage } = useContext(MessageContext);
 
-    const [apiError, setApiError] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
+
+    const { setMessage } = useContext(MessageContext);
 
     const [item, setItem] = useState({});
     const [formParts, setFormParts] = useState({
@@ -27,31 +32,38 @@ const PortfolioItem = () => {
     const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
-        getPortfolioItem(id)
-            .then((result) => {
-                setItem(result);
-                
-                setFormParts({
-                    title: result.title,
-                    description: result.description,
-                    hosted_url: result.hosted_url,
-                    github_url: result.github_url,
-                    image_url: result.image_url,
-                    video_url: result.video_url,
-                })
+        document.title = `Viewing #${item?.id} ${item?.title}`;
+    }, [item]);
 
-                setLoading(false);
-            })
-            .catch((error) => {
+    useEffect(() => {
+
+        const controller = new AbortController();
+        setLoading(true);
+
+        const getPortfolioItem = async () => {
+
+            try {
+                const response = await apiPrivate(`/api/admin/portfolios/${id}/view`, {
+                    signal: controller.signal
+                });
+
+                setItem(response?.data?.item);
+
+                setFormParts({
+                    title: response?.data?.item.title,
+                    description: response?.data?.item.description,
+                    hosted_url: response?.data?.item.hosted_url,
+                    github_url: response?.data?.item.github_url,
+                    image_url: response?.data?.item.image_url,
+                    video_url: response?.data?.item.video_url,
+                });
+            } catch (error) {
+
+                //console.log(error);
                 if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
+
+                    setLoading(false);
+                    navigate('/login', { state: { from: location }, replace: true });
                 } else {
                     setMessage({
                         msgType: 'error',
@@ -61,10 +73,19 @@ const PortfolioItem = () => {
                         dismiss: false,
                     });
                 }
+            } finally {
+
                 setLoading(false);
-                setApiError(true);
-            })
-    }, [id, setMessage]);
+            }
+        }
+
+        getPortfolioItem();
+
+        return () => {
+            controller.abort();
+        };
+
+    }, [id, setMessage, apiPrivate, location, navigate]);
 
     const toggleExpanded = () => {
 
@@ -74,24 +95,20 @@ const PortfolioItem = () => {
 
     const backHandler = () => {
 
-        window.location.replace('/portfolio');
-
+        navigate("/portfolio");
     }
-
-    if (apiError)
-        return (<></>);
 
     if (loading)
         return <SpinnerSmall />;
     
-    /** TODO: Update this on edit: form save, yet another prop???  */
+    /** TODO: Update this on edit success  */
     return (
         <>
             <section id="view-portfolio-item">
                 <div id="edit-bar" className="w-full my-2 flex flex-row justify-end px-3">
                     <button type="button" className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-1 px-3 hover:animate-pulse rounded-full shadow-md me-3" onClick={backHandler}>
                         <i className="me-3 fa-solid fa-left-long"></i>
-                        Back
+                        Project List
                     </button>
                     <button type="button" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 px-3 rounded-full shadow-md" onClick={toggleExpanded}>
                         {!expanded ? <i className="me-3 fa-regular fa-square-plus"></i> : <i className="me-3 fa-regular fa-square-minus"></i>}

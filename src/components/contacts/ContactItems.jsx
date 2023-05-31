@@ -1,18 +1,23 @@
-import { useEffect, useState, useContext } from "react";
-import { UserContext } from "../../contexts/User";
-import { MessageContext } from "../../contexts/Message";
-import { getContactItems } from "../../api/ApiConsumer";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 import ContactItemsList from "./ContactItemsList";
 
 const ContactItems = () => {
 
-    const { user } = useContext(UserContext);
-    const { setMessage } = useContext(MessageContext);
+    useEffect(() => {
+        document.title = 'View Messages';
+    });
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [apiError, setApiError] = useState(false);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -39,45 +44,35 @@ const ContactItems = () => {
     }
 
     useEffect(() => {
+
+        const controller = new AbortController();
+
         setLoading(true);
-        setApiError(false);
-        if (user.token) {
-            getContactItems(user.token)
-                .then((results) => {
- 
-                    setList(results);
-                    setLoading(false);
-                    setApiError(false);
-                })
-                .catch((error) => {
-                    if (error.response.status === 401) {
-                        setMessage({
-                            msgType: 'error',
-                            showMsg: true,
-                            title: 'Login Expired or Invalid',
-                            msg: 'Your login has expired or is invalid, please try logging in again',
-                            dismiss: false,
-                        });
-                    } else {
-                        setMessage({
-                            msgType: 'error',
-                            showMsg: true,
-                            title: 'Something Went Wrong',
-                            msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                            dismiss: false,
-                        });
-                    }
-                    setLoading(false);
-                    setApiError(true);
+        const getContactItems = async () => {
+            try {
+
+                const response = await apiPrivate.get(`/api/admin/contacts/index`, {
+                    signal: controller.signal
                 });
+
+                setList(response.data);
+
+                setLoading(false);
+            } catch (error) {
+
+                navigate('/login', { state: { from: location }, replace: true });
+            }
         }
-    }, [user.token, setMessage]);
+
+        getContactItems();
+
+        return () => {
+            controller.abort();
+        };
+    }, [apiPrivate, location, navigate]);
 
     if (loading)
         return <SpinnerSmall />
-    
-    if (apiError)
-        return (<></>);
 
     return (
         <>

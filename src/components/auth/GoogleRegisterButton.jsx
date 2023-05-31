@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { MessageContext } from '../../contexts/Message';
 import { GoogleLogin } from '@react-oauth/google';
 
-const GoogleLoginButton = ({ setGoogleCredential }) => {
+const GoogleRegisterButton = ({ setGoogleCredential }) => {
 
     const { setMessage } = useContext(MessageContext);
 
@@ -17,7 +17,7 @@ const GoogleLoginButton = ({ setGoogleCredential }) => {
             {
                 msgType: 'error',
                 showMsg: true,
-                title: 'Login Failed',
+                title: 'Registration Failed',
                 msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
                 dismiss: true,
             }
@@ -27,7 +27,6 @@ const GoogleLoginButton = ({ setGoogleCredential }) => {
     return (
         <>
             <GoogleLogin
-                useOneTap={true}
                 size="large"
                 shape="pill"
                 onSuccess={credentialResponse => {
@@ -41,8 +40,6 @@ const GoogleLoginButton = ({ setGoogleCredential }) => {
             />
         </>
     )
-
-
 }
 
-export default GoogleLoginButton;
+export default GoogleRegisterButton;

@@ -5,7 +5,7 @@ const PortfolioItemsList = ({ list, setListHandler, expanded, deleteModalHandler
 
     return (
         <>
-            <PortfolioForm expanded={expanded} setListHandler={setListHandler} useMode={'add'} item={null} />
+            <PortfolioForm expanded={expanded} setListHandler={setListHandler} formMode={'add'} item={null} />
             <div className="w-full shadow-md">
                 <table className="w-full border-separate border-spacing-y-1">
                     <thead>

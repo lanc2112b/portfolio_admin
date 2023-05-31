@@ -1,44 +1,56 @@
 import { useEffect, useState, useContext } from "react";
-import { deletePortfolioItem, getPortfolioItems } from "../../api/ApiConsumer";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import Bread from "../uiparts/Bread";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import { MessageContext } from "../../contexts/Message";
-import { UserContext } from "../../contexts/User";
+
+import Bread from "../uiparts/Bread";
 import PortfolioItemsList from "./PortfolioItemsList";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const Portfolio = () => {
 
-    const { user } = useContext(UserContext);
     const { setMessage } = useContext(MessageContext);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(false);
-    const [apiError, setApiError] = useState(false);
-    
 
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
+        document.title = `Viewing Project Items`;
+    }, []);
+
+    useEffect(() => {
+
+        const controller = new AbortController();
         setLoading(true);
-        //console.log(user, "sending as token");
-        getPortfolioItems()
-            .then((results) => {
-                setList(results);
-                setLoading(false);
-            })
-            .catch((error) => {
+
+        const getPortfolioItems = async () => {
+
+            try { 
+
+                const response = await apiPrivate.get(`/api/admin/portfolios/index`, {
+                    signal: controller.signal
+                });
+
+                setList(response.data);
+            } catch (error) {   
+                
                 if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
+
+                    setLoading(false);
+                    navigate('/login', { state: { from: location }, replace: true });
                 } else {
+
                     setMessage({
                         msgType: 'error',
                         showMsg: true,
@@ -47,11 +59,20 @@ const Portfolio = () => {
                         dismiss: false,
                     });
                 }
+            } finally {
+                
                 setLoading(false);
-                setApiError(true);
-            });
+            }
 
-    }, [user.access_token, setMessage]);
+        }
+        
+        getPortfolioItems();
+        
+        return () => {
+            controller.abort();
+        };
+
+    }, [ setMessage, apiPrivate, location, navigate]);
 
     const toggleExpanded = () => {
 
@@ -64,49 +85,51 @@ const Portfolio = () => {
         setDeleteId(value);
     }
 
-    const deleteHandler = (value) => {
-        //console.log(value, deleteId, 'values match?');
-        //do delete: 
-        deletePortfolioItem(user.access_token, value)
-            .then((result) => {
-                if (result === 204) {
-                    //setList();
-                    const filtered = list.filter((element) => {
-                        return element.id !== value;
-                    }); 
+    const deleteHandler = async (value) => {
 
-                    toast.custom(<Bread msgObj={{
-                        title: 'Deleted',
-                        msg: 'Item successfully deleted',
-                    }} />);
-                    setList(filtered);
-                }
-            //console.log(result);
+        try { 
 
-            })
-            .catch((error) => {
-                if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
-                } else {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Something Went Wrong',
-                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                        dismiss: false,
-                    });
+            const response = await apiPrivate.delete(`/api/admin/portfolios/${value}/delete`);
+
+            if (response.status === 204) {
+
+                const filtered = list.filter((element) => {
+                    return element.id !== value;
+                });
+
+                setList(filtered);
+
+                const msg = {
+                    type: 'success',
+                    title: 'Deleted',
+                    msg: 'Portfolio item successfully deleted',
                 }
-                setLoading(false);
-                setApiError(true);
-            });
-        setShowModal(false);
-        setDeleteId(null);
+
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+            
+
+        } catch (error) {
+
+            if (error.response.status === 401) {
+
+                navigate('/login', { state: { from: location }, replace: true });
+            } else {
+                setMessage({
+                    msgType: 'error',
+                    showMsg: true,
+                    title: 'Something Went Wrong',
+                    msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
+                    dismiss: false,
+                });
+            }
+            
+        } finally {
+
+            setLoading(false);
+            setShowModal(false);
+            setDeleteId(null); 
+        }
         
     }
 
@@ -119,9 +142,6 @@ const Portfolio = () => {
         setList([ ...list, value ]);
 
     }
-
-    if (apiError)
-        return (<></>);
 
     if (loading)
         return <SpinnerSmall />
@@ -150,7 +170,7 @@ const Portfolio = () => {
                                 onClick={() => setShowModal(false)}
                             >
                                 <span className="bg-transparent text-zinc-800 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                    ×
+                                    × {/**  TODO: Add font awesome icon! */}
                                 </span>
                             </button>
                         </div>

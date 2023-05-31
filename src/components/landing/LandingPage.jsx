@@ -1,8 +1,9 @@
-import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../contexts/User";
-import { MessageContext } from "../../contexts/Message";
-import { getLandingPageItems, deleteLandingItem } from "../../api/ApiConsumer";
+import { useState, useEffect } from "react"; 
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import Bread from "../uiparts/Bread";
 import LandingListTableHead from "./LandingListTableHead";
 import LandingListTableRow from "./LandingListTableRow";
@@ -12,13 +13,12 @@ import SpinnerSmall from "../uiparts/SpinnerSmall";
 const LandingPage = () => {
 
     useEffect(() => {
-        document.title = 'Admin Panel';
+        document.title = 'Landing Page Content';
     });
 
-    const { user } = useContext(UserContext);
-    const { setMessage } = useContext(MessageContext);
-
-    const [apiError, setApiError] = useState(false);
+    const apiPrivate = useApiPrivate();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [areaList, setAreaList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -28,19 +28,32 @@ const LandingPage = () => {
 
     useEffect(() => {
 
+        const controller = new AbortController();
         setLoading(true);
+        
+        const getLandingPageItems = async () => {
 
-        getLandingPageItems()
-            .then((results) => {
-                setAreaList(results);
+            try {
+                const response = await apiPrivate.get(`/api/admin/landings/index`, {
+                    signal: controller.signal
+                });
+
+                setAreaList(response.data);
                 setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            } catch (error) {
+                //console.log(error);
+                navigate('/login', { state: { from: location }, replace: true });
+            }
 
+        } 
 
-    }, [])
+        getLandingPageItems();
+
+        return () => {
+            controller.abort();
+        }
+
+    }, [apiPrivate, location, navigate])
 
     const setListHandler = (result) => {
         setAreaList((currentList) => [...currentList, result]);
@@ -49,7 +62,6 @@ const LandingPage = () => {
     const toggleExpanded = () => {
 
         setExpanded(!expanded);
-
     }
 
     const deleteModalHandler = (value) => {
@@ -57,46 +69,48 @@ const LandingPage = () => {
         setDeleteId(value);
     }
 
-    const deleteHandler = (value) => {
-        //console.log(value, deleteId, 'values match?');
-        //do delete: 
-        deleteLandingItem(user.access_token, value)
-            .then((result) => {
-                if (result === 204) {
-                    //setList();
-                    const filtered = areaList.filter((element) => {
-                        return element.id !== value;
-                    });
+    const deleteHandler = async (value) => {
 
-                    setAreaList(filtered);
-                    toast.custom(<Bread msgObj={{
-                        title: 'Deleted',
-                        msg: 'Content successfully deleted',
-                    }} />);
-                }
-                setApiError(false);
-            })
-            .catch((error) => {
-                if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
-                } else {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Something Went Wrong',
-                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                        dismiss: false,
-                    });
+        try {
+
+            const response = await apiPrivate.delete(`/api/admin/landings/${value}/delete`);
+
+            if (response.status === 204) {
+                
+                const filtered = areaList.filter((element) => {
+                    return element.id !== value;
+                });
+
+                setAreaList(filtered);
+
+                const msg = {
+                    type: 'success',
+                    title: 'Deleted',
+                    msg: 'Content successfully deleted',
                 }
 
-                setApiError(true);
-            });
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+
+        } catch (error) {
+
+            if (error.response.status === 401) {
+
+                navigate('/login', { state: { from: location }, replace: true });
+            } else {
+
+                const msg = {
+                    type: 'danger',
+                    title: 'Failed',
+                    msg: 'Failed to delete content',
+                }
+
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+
+            //console.error(error);
+        }
+
         setShowModal(false);
         setDeleteId(null);
 
@@ -105,10 +119,6 @@ const LandingPage = () => {
     const closeModalHandler = () => {
         setShowModal(false);
     }
-
-
-    if (apiError)
-        return (<></>);
 
     if (loading)
         return <SpinnerSmall />;

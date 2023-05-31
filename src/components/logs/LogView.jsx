@@ -1,74 +1,68 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import { UserContext } from "../../contexts/User";
-import { MessageContext } from "../../contexts/Message";
+import useApiPrivate from "../../hooks/useApiPrivate";
 
 import SpinnerSmall from "../uiparts/SpinnerSmall";
-import { getLogItems } from "../../api/ApiConsumer";
 import LogItemsList from "./LogItemsList";
 import Paginator from "../uiparts/Paginator";
 import LimitFilter from "../uiparts/LimitFilter";
 
+
+
 const LogView = () => {
 
+    useEffect(() => {
+        document.title = 'View Logs';
+    });
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
+
     const [list, setList] = useState([]);
-    
+
     const [rowCount, setRowCount] = useState(0);
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
 
     const [loading, setLoading] = useState(false);
-    const [apiError, setApiError] = useState(false);
-
-    const { user } = useContext(UserContext);
-    const { setMessage } = useContext(MessageContext);
 
     if (limit > rowCount && page > 1)
         setPage(1);
 
     useEffect(() => {
 
+        const controller = new AbortController();
+
         setLoading(true);
-        if (user.access_token) {
-            getLogItems(user.access_token, page, limit)
-                .then((results) => {
-                    setList(results[1]);
-                    setRowCount(results[0][0].total_rows);
-                    setApiError(false);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    if (error.response.status === 401) {
-                        setMessage({
-                            msgType: 'error',
-                            showMsg: true,
-                            title: 'Login Expired or Invalid',
-                            msg: 'Your login has expired or is invalid, please try logging in again',
-                            dismiss: false,
-                        });
-                    } else {
-                        setMessage({
-                            msgType: 'error',
-                            showMsg: true,
-                            title: 'Something Went Wrong',
-                            msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                            dismiss: false,
-                        });
-                    }
-                    setLoading(false);
-                    setApiError(true);
+        const getLogItems = async () => {
+            try {
+
+                const response = await apiPrivate.get(`/api/admin/logs/index?page=${page}&limit=${limit}`, {
+                    signal: controller.signal
                 });
+
+                setList(response.data[1]);
+                setRowCount(response.data[0][0].total_rows);
+                setLoading(false);
+            } catch (error) {
+                //console.log(error);
+                setLoading(false);
+                navigate('/login', { state: { from: location }, replace: true });
+            }
         }
-    }, [page, limit, user.access_token, setMessage, setRowCount]);
+
+        getLogItems();
+
+        return () => {
+            controller.abort();
+        };
+    }, [apiPrivate, limit, page, navigate, location]);
 
     if (loading)
         return <SpinnerSmall />
 
-    if (apiError)
-        return (<></>);
-
-    console.table(list);
-    
     return (
         <>
             <section className="log-list">

@@ -1,13 +1,20 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { getLandingPageItem } from "../../api/ApiConsumer";
+import { useState, useEffect, useContext } from "react"; //
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import { MessageContext } from "../../contexts/Message";
+
 import LandingContentForm from "./LandingContentForm";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingViewItem = () => {
 
     const { id } = useParams();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
 
     const { setMessage } = useContext(MessageContext);
 
@@ -20,32 +27,40 @@ const LandingViewItem = () => {
     });
 
     const [loading, setLoading] = useState(false);
-    const [apiError, setApiError] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
-        getLandingPageItem(id)
-            .then((result) => {
-                setItem({ ...result });
+        document.title = `Viewing #${item?.id} ${item?.area_title}`;
+    }, [item]);
 
+    useEffect(() => {
+
+        setLoading(true);
+        const controller = new AbortController();
+
+        const getLandingPageItem = async () => {
+
+            try {
+                const response = await apiPrivate.get(`/api/admin/landings/${id}/view`, {
+                    signal: controller.signal
+                });
+
+                setItem({ ...response?.data?.item });
                 setFormParts({
-                    area_title: result?.area_title,
-                    area_content_title: result?.area_content_title,
-                    area_content: result?.area_content,
-                    area_content_image: result?.area_content_image,
+                    area_title: response?.data?.item?.area_title,
+                    area_content_title: response?.data?.item?.area_content_title,
+                    area_content: response?.data?.item?.area_content,
+                    area_content_image: response?.data?.item?.area_content_image,
                 });
 
                 setLoading(false);
-            })
-            .catch((error) => {
+
+            } catch (error) {
+
+                //console.log(error);
                 if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
+
+                    setLoading(false);
+                    navigate('/login', { state: { from: location }, replace: true });
                 } else {
                     setMessage({
                         msgType: 'error',
@@ -55,14 +70,21 @@ const LandingViewItem = () => {
                         dismiss: false,
                     });
                 }
-                setLoading(false);
-                setApiError(true);
-            })
+             }
+        }
 
-    }, [id, setMessage]);
+        getLandingPageItem();
 
-    if (apiError)
-        return (<></>);
+        return () => {
+            controller.abort();
+        };
+        
+    }, [id, setMessage, apiPrivate, location, navigate]);
+
+    const backHandler = () => {
+
+        navigate("/landing-content");
+    }
 
     if (loading)
         return <SpinnerSmall />
@@ -70,13 +92,21 @@ const LandingViewItem = () => {
     return (
         <>
             <section id="list-landingpage-content">
+                <div id="edit-bar" className="w-full my-2 flex flex-row justify-end px-3">
+                    <button type="button" className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-1 px-3 hover:animate-pulse rounded-full shadow-md me-3" onClick={backHandler}>
+                        <i className="me-3 fa-solid fa-left-long"></i>
+                        Content List
+                    </button>
+                    {/* <button type="button" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 px-3 rounded-full shadow-md" onClick={toggleExpanded}>
+                        {!expanded ? <i className="me-3 fa-regular fa-square-plus"></i> : <i className="me-3 fa-regular fa-square-minus"></i>}
+                        Edit
+                    </button> */}
+                </div>
                 <p className="hidden"> Editing: {item.id}</p> {/** TODO: Until the public FE exists, and a view of the FP exists */}
                 <LandingContentForm expanded={true} formMode={'edit'} id={id} formParts={formParts} setFormParts={setFormParts} loading={loading} />
-
             </section>
         </>
     )
-
 }
 
 export default LandingViewItem;

@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 const LandingListTableRow = ({ element, deleteModalHandler }) => {
 
+    const navigate = useNavigate();
     const editClickHandler = (value) => {
 
-        window.location.replace(`/landing-content/${value}`);
-
+        navigate(`/landing-content/${value}`);
     }
     return (
         <>

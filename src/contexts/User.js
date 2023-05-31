@@ -1,24 +1,14 @@
 import { createContext, useState } from "react";
 
-export const UserContext = createContext();
+export const UserContext = createContext({});
 
 export const UserProvider = ({ children }) => {
 
-  const initial = {
-    user: {
-      first_name: null,
-      last_name: null,
-      photo_url: null,
-      email: null,
-      access_token: null,
-      refresh_at: null,
-    },
-  };
-
-  const [user, setUser] = useState(initial);
+  const [user, setUser] = useState({});
+  const [persist, setPersist] = useState(JSON.parse(localStorage.getItem("persist")) || false);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, persist, setPersist }}>
       {children}
     </UserContext.Provider>
   );

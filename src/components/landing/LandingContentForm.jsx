@@ -1,17 +1,17 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+
+import useApiPrivate from "../../hooks/useApiPrivate";
+
 import Bread from "../uiparts/Bread";
-import { UserContext } from "../../contexts/User";
-import { MessageContext } from "../../contexts/Message";
-import { postLandingItem, patchLandingItem } from "../../api/ApiConsumer";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts, setFormParts, loading }) => {
 
-    const { user } = useContext(UserContext);
-    const { setMessage } = useContext(MessageContext);
-
-    const [apiError, setApiError] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const apiPrivate = useApiPrivate();
 
     const [formErrors, setFormErrors] = useState({
         area_title: null,
@@ -30,11 +30,9 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
     const [formObj, setFormObj] = useState(initial);
 
-    const formHandler = (event) => {
+    const formHandler = async (event) => {
 
         event.preventDefault();
-
-        const token = user.access_token;
 
         setFormErrors((currentObj) => { return { ...currentObj, errors: null } });
 
@@ -57,61 +55,60 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
         }
 
-        const modeFunc = (formMode === 'add') ? postLandingItem : patchLandingItem;
+        try {
+            const response = (formMode === 'add')
+                ? await apiPrivate.post(`/api/admin/landings/add`, formObj)
+                : await apiPrivate.patch(`/api/admin/landings/${id}/update`, formObj);
 
-        modeFunc(formObj, token, id)
-            .then((result) => {
+            //console.log(response);
+            
+            if (response.status === 201) {
+                
+            setListHandler(response.data.item);
+                const msg = {
+                    type: 'success',
+                    title: 'Added',
+                    msg: 'Content added',
+                };
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
 
-                if (formMode === 'add') {
+            if (response.status === 204) {
 
-                    setListHandler(result);
-                    const msg = {
-                        type: 'success',
-                        title: 'Added',
-                        msg: 'Content successfully added',
-                    };
-                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
-                    resetHandler();
+                setFormParts({ ...formObj });
+                const msg = {
+                    type: 'success',
+                    title: 'Updated',
+                    msg: 'Content updated',
+                };
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+
+            resetHandler();
+
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) {
+
+                navigate('/login', { state: { from: location }, replace: true });
+            } else if (error.response.status === 400) {
+
+                const msg = {
+                    type: 'warning',
+                    title: 'Failed',
+                    msg: 'Please check the form & try again',
                 }
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            } else {
 
-                if (formMode === 'edit') {
-
-                    setFormParts({ ...formObj });
-                    const msg = {
-                        type: 'success',
-                        title: 'Updated',
-                        msg: 'Content successfully updated',
-                    };
-                    toast.custom(t => (<Bread msgObj={msg} t={t} />));
+                const msg = {
+                    type: 'danger',
+                    title: 'Failed',
+                    msg: 'Failed to add content',
                 }
-
-                setApiError(false);
-
-            })
-            .catch((error) => {
-
-                if (error.response.status === 401) {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Login Expired or Invalid',
-                        msg: 'Your login has expired or is invalid, please try logging in again',
-                        dismiss: false,
-                    });
-                } else {
-                    setMessage({
-                        msgType: 'error',
-                        showMsg: true,
-                        title: 'Something Went Wrong',
-                        msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
-                        dismiss: false,
-                    });
-                }
-
-                setApiError(true);
-
-            });
-
+                toast.custom(t => (<Bread msgObj={msg} t={t} />));
+            }
+        }
     }
 
     const changeHandler = (event) => {
@@ -217,9 +214,6 @@ const LandingContentForm = ({ expanded, formMode, id, setListHandler, formParts,
 
     if (loading)
         return <SpinnerSmall />;
-
-    if (apiError)
-        return (<></>);
 
     return (
         <>

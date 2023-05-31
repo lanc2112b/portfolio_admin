@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DateTime } from 'luxon';
 
 const PortfolioItemRow = ({ element, deleteModalHandler }) => {
 
+    const navigate = useNavigate();
+
     const clickHandler = (value) => {
 
-        window.location.replace(`/portfolio/${value}`);
-
+        navigate(`/portfolio/${value}`);
     }
 
     return (

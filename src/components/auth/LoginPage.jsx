@@ -63,7 +63,7 @@ const LoginPage = () => {
                         msg: 'If this message persists, please contact the administrator, if you are the administrator, fix the issue please.',
                         dismiss: true,
                     });
-                    console.log(error);
+                    //console.log(error);
                 })
         }
 

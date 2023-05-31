@@ -1,7 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 const FourOhFour = () => {
 
+    const navigate = useNavigate();
+
     const redirectHandler = () => {
-        window.location.replace('/');
+        navigate("/");
     }
 
     return (

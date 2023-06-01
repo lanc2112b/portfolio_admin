@@ -44,7 +44,7 @@ const LogView = () => {
                 });
 
                 setList(response.data[1]);
-                setRowCount(response.data[0][0].total_rows);
+                setRowCount(response.data[0].total_rows);
                 setLoading(false);
             } catch (error) {
                 //console.log(error);

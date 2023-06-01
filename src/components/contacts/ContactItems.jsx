@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useApiPrivate from "../../hooks/useApiPrivate";
 
 import SpinnerSmall from "../uiparts/SpinnerSmall";
+import Paginator from "../uiparts/Paginator";
+import LimitFilter from "../uiparts/LimitFilter";
 import ContactItemsList from "./ContactItemsList";
 
 const ContactItems = () => {
@@ -19,8 +21,11 @@ const ContactItems = () => {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [showModal, setShowModal] = useState(false);
+    const [rowCount, setRowCount] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
 
+    const [showModal, setShowModal] = useState(false);
     const [modalFill, setModalFill] = useState({})
 
     const modalHandler = (index) => {
@@ -51,15 +56,16 @@ const ContactItems = () => {
         const getContactItems = async () => {
             try {
 
-                const response = await apiPrivate.get(`/api/admin/contacts/index`, {
+                const response = await apiPrivate.get(`/api/admin/contacts/index?page=${page}&limit=${limit}`, {
                     signal: controller.signal
                 });
 
-                setList(response.data);
-
+                setList(response.data[1]);
+                setRowCount(response.data[0].total_rows);
                 setLoading(false);
             } catch (error) {
-
+                
+                setLoading(false);
                 navigate('/login', { state: { from: location }, replace: true });
             }
         }
@@ -69,15 +75,16 @@ const ContactItems = () => {
         return () => {
             controller.abort();
         };
-    }, [apiPrivate, location, navigate]);
+    }, [apiPrivate, location, navigate, limit, page]);
 
     if (loading)
         return <SpinnerSmall />
 
     return (
-        <>
+        <>  
+            <LimitFilter setLimit={setLimit} limit={limit} />
             <ContactItemsList list={list} modalHandler={modalHandler} />
-
+            <Paginator rowCount={rowCount} page={page} limit={limit} setPage={setPage} />
             {showModal ? (
                 <>
                     <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none mx-1" onClick={() => setShowModal(false)} >

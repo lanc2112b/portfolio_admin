@@ -35,6 +35,9 @@ const Portfolio = () => {
         document.title = `Viewing Project Items`;
     }, []);
 
+    if (limit > rowCount && page > 1)
+        setPage(1);
+
     useEffect(() => {
 
         const controller = new AbortController();
@@ -44,7 +47,7 @@ const Portfolio = () => {
 
             try { 
 
-                const response = await apiPrivate.get(`/api/admin/portfolios/index`, {
+                const response = await apiPrivate.get(`/api/admin/portfolios/index?page=${page}&limit=${limit}`, {
                     signal: controller.signal
                 });
 
@@ -79,7 +82,7 @@ const Portfolio = () => {
             controller.abort();
         };
 
-    }, [ setMessage, apiPrivate, location, navigate]);
+    }, [ setMessage, apiPrivate, location, navigate, limit, page]);
 
     const toggleExpanded = () => {
 

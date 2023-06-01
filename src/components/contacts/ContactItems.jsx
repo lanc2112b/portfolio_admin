@@ -48,6 +48,9 @@ const ContactItems = () => {
         setShowModal(!showModal);
     }
 
+    if (limit > rowCount && page > 1)
+        setPage(1);
+
     useEffect(() => {
 
         const controller = new AbortController();

@@ -7,8 +7,10 @@ import useApiPrivate from "../../hooks/useApiPrivate";
 import { MessageContext } from "../../contexts/Message";
 
 import Bread from "../uiparts/Bread";
-import PortfolioItemsList from "./PortfolioItemsList";
 import SpinnerSmall from "../uiparts/SpinnerSmall";
+import Paginator from "../uiparts/Paginator";
+import LimitFilter from "../uiparts/LimitFilter";
+import PortfolioItemsList from "./PortfolioItemsList";
 
 const Portfolio = () => {
 
@@ -20,8 +22,12 @@ const Portfolio = () => {
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [expanded, setExpanded] = useState(false);
 
+    const [rowCount, setRowCount] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
+
+    const [expanded, setExpanded] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
@@ -42,7 +48,8 @@ const Portfolio = () => {
                     signal: controller.signal
                 });
 
-                setList(response.data);
+                setList(response.data[1]);
+                setRowCount(response.data[0].total_rows);
             } catch (error) {   
                 
                 if (error.response.status === 401) {
@@ -154,8 +161,9 @@ const Portfolio = () => {
                     Add
                 </button>
             </div>
+            <LimitFilter setLimit={setLimit} limit={limit} />
             <PortfolioItemsList list={list} setListHandler={setListHandler} expanded={expanded} deleteModalHandler={deleteModalHandler} />
-
+            <Paginator rowCount={rowCount} page={page} limit={limit} setPage={setPage} />
             <div className={`${showModal ? '' : 'hidden'} fixed inset-0 z-50 justify-center items-center flex overflow-x-hidden overflow-y-auto outline-none focus:outline-none mx-1`}>
                 <div className="relative w-full my-6 mx-auto max-w-xl">
                     {/*content*/}

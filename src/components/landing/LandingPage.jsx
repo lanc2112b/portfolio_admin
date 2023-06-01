@@ -5,10 +5,12 @@ import { toast } from "react-hot-toast";
 import useApiPrivate from "../../hooks/useApiPrivate";
 
 import Bread from "../uiparts/Bread";
+import SpinnerSmall from "../uiparts/SpinnerSmall";
+import Paginator from "../uiparts/Paginator";
+import LimitFilter from "../uiparts/LimitFilter";
 import LandingListTableHead from "./LandingListTableHead";
 import LandingListTableRow from "./LandingListTableRow";
 import LandingContentForm from "./LandingContentForm";
-import SpinnerSmall from "../uiparts/SpinnerSmall";
 
 const LandingPage = () => {
 
@@ -22,6 +24,11 @@ const LandingPage = () => {
 
     const [areaList, setAreaList] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const [rowCount, setRowCount] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
+
     const [expanded, setExpanded] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
@@ -34,11 +41,12 @@ const LandingPage = () => {
         const getLandingPageItems = async () => {
 
             try {
-                const response = await apiPrivate.get(`/api/admin/landings/index`, {
+                const response = await apiPrivate.get(`/api/admin/landings/index?page=${page}&limit=${limit}`, {
                     signal: controller.signal
                 });
 
-                setAreaList(response.data);
+                setAreaList(response.data[1]);
+                setRowCount(response.data[0].total_rows);
                 setLoading(false);
             } catch (error) {
                 //console.log(error);
@@ -53,7 +61,7 @@ const LandingPage = () => {
             controller.abort();
         }
 
-    }, [apiPrivate, location, navigate])
+    }, [apiPrivate, location, navigate, limit, page])
 
     const setListHandler = (result) => {
         setAreaList((currentList) => [...currentList, result]);
@@ -135,6 +143,7 @@ const LandingPage = () => {
                     </button>
                 </div>
                 <LandingContentForm expanded={expanded} formMode={'add'} setListHandler={setListHandler} />
+                <LimitFilter setLimit={setLimit} limit={limit} />
                 <div className="w-full shadow-md">
                     <table className="w-full border-separate border-spacing-y-1">
                         <LandingListTableHead />
@@ -145,6 +154,7 @@ const LandingPage = () => {
                         </tbody>
                     </table>
                 </div>
+                <Paginator rowCount={rowCount} page={page} limit={limit} setPage={setPage} />
                 {/**  Add content / FP preview here. Demonstrates which section is to be edited */}
             </section>
 

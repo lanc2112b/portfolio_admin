@@ -33,6 +33,9 @@ const LandingPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
+    if (limit > rowCount && page > 1)
+        setPage(1);
+
     useEffect(() => {
 
         const controller = new AbortController();
